@@ -19,4 +19,4 @@
 
 const { ipcRenderer } = require('electron');
 window.ipcRenderer = ipcRenderer;
-require('./backend/app')
+// require('./backend/app')

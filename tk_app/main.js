@@ -2,9 +2,11 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url');
+const server = require('./backend/bin/www');
 
 function createWindow() {
   // Create the browser window.
+  const isDev = false;
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -16,9 +18,21 @@ function createWindow() {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('./index.html')
+  mainWindow.loadFile('./index.html').then(() => {
+    
+  })
+
+  mainWindow.loadURL(
+    isDev
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, './build/index.html')}`
+  ).then(() => {
+    mainWindow.maximize();
+    mainWindow.show();
+  });
+
   // mainWindow.setMenu(null)
-  // mainWindow.loadURL(startUrl);
+  // mainWindow.loadURL('http://localhost:5000');
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()

@@ -32,7 +32,7 @@ const db = {
     }
 }
 
-db.sequelize.sync({ force: false, alter: true })
+db.sequelize.sync({ force: false })
     .then(() => logger.success("43a61d98-31ea-11ed-a261-0242ac120002", 0, "DB Synced"))
     .catch((err) => logger.error("967a7866-31ea-11ed-a261-0242ac120002", 0, `DB sync error : ${err}`));
 
