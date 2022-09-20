@@ -7,7 +7,8 @@
     "build:fe": "cd ./tk_fe && npm run build",
     "bundle:fe": "mv -v ./tk_fe/build ./tk_app",
     "bundle:be": "cp -r ./tk_be ./tk_app/backend",
-    "build": "npm run build:fe && npm run bundle:fe && npm run bundle:be"
+    "pakage:app:win":"cd ./tk_app && npm run package:win",
+    "build": "npm run build:fe && npm run bundle:fe && npm run bundle:be && npm run pakage:app:win"
   },
   "repository": {
     "type": "git",
