@@ -7,9 +7,7 @@ import AddStudentWizard from './components/AddStudentWizard';
 import studentApis from '../../api/studentServices';
 import { StudentContext } from './Store'
 import StudentActions from "./Actions";
-import FilterTray from './components/StudentsList/components/FilterTray';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import SearchIcon from '@mui/icons-material/Search';
 
 const StudentManager = () => {
 

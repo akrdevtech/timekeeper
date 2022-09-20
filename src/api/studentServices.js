@@ -52,7 +52,7 @@ const getStudentsList = async (page, limit, appliedStudentListFilters) => {
     }
     if (course !== 'any' && !course.includes('any')) {
         course.map(cid=>{
-            url = `${url}&course=${cid}`
+            return url = `${url}&course=${cid}`
         })
     }
     if (search !== '') {

@@ -6,7 +6,7 @@ import StudentActions from '../../../../Actions';
 
 const AppliedFiltersContainer = props => {
     const [state, dispatch] = useContext(StudentContext);
-    const { appliedStudentListFilters, filterTrayToggle, studentListPagination } = state;
+    const { appliedStudentListFilters, studentListPagination } = state;
 
     const {
         admission,

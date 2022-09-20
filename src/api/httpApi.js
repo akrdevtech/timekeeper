@@ -79,10 +79,13 @@ instance.interceptors.response.use(null, (error) => {
   // Promise.reject(error);
 });
 
-export default {
+
+const httpTypes = {
   get: instance.get,
   post: instance.post,
   put: instance.put,
   patch: instance.patch,
   delete: instance.delete,
 };
+
+export default httpTypes;

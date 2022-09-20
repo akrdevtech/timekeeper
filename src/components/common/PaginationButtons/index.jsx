@@ -17,7 +17,7 @@ const PaginationButtons = (props) => {
                 <b>{numberOfPages ? currentPage + 1 : currentPage} &nbsp; of &nbsp; {numberOfPages}</b>
             </Typography>
             <IconButton
-                disabled={!numberOfPages || currentPage + 1 == numberOfPages} color='primary'
+                disabled={!numberOfPages || currentPage + 1 === numberOfPages} color='primary'
                 onClick={()=>handlePageChange("inc")}
             >
                 <KeyboardArrowRightIcon />
