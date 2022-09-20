@@ -62,7 +62,7 @@ const WizardStudentBasicInfo = (props) => {
             <DesktopDatePicker
               value={dateOfBirth}
               onChange={(newValue) => {
-                handleInputChange("dateOfBirth", newValue);
+                handleInputChange("dateOfBirth", new Date(newValue));
               }}
               renderInput={(params) =>
                 <TextField {...params}

@@ -47,7 +47,7 @@ const WizardStudentCourseInfo = (props) => {
             <DesktopDatePicker
               value={dateOfAdmission}
               onChange={(newValue) => {
-                handleInputChange("dateOfAdmission", newValue);
+                handleInputChange("dateOfAdmission", new Date(newValue));
               }}
               renderInput={(params) =>
                 <TextField {...params}
