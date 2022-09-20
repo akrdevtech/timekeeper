@@ -4,7 +4,10 @@
   "description": "Time keeper application for IELTS centers",
   "main": "index.js",
   "scripts": {
-    "build": "cd tk_fe && npm run build && mv -v ./build ../tk_app"
+    "build:fe": "cd ./tk_fe && npm run build",
+    "bundle:fe": "mv -v ./tk_fe/build ./tk_app",
+    "bundle:be": "cp -r ./tk_be ./tk_app/backend",
+    "build": "npm run build:fe && npm run bundle:fe && npm run bundle:be"
   },
   "repository": {
     "type": "git",
