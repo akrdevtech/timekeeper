@@ -9,6 +9,7 @@ const formatDataToStudentList = (rows = []) => {
             dateOfBirth: row.dateOfBirth,
             occupation: row.occupation,
             isPresent: row.isPresent,
+            isActive: row.isActive,
             contactInfo: {
                 email: row.email,
                 phone: row.phone,
