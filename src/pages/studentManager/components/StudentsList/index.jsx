@@ -3,6 +3,7 @@ import StudentsListItem from './components/StudentsListItem'
 import { Grid } from '@mui/material'
 import AppliedFiltersContainer from './components/AppliedFiltersContainer';
 import FilterTray from './components/FilterTray';
+import noSearchResults from "../../../../assets/images/placeholders/noSearchResults.svg";
 
 const StudentsList = (props) => {
     const { studentsList, selectedStudentId, handleSelectStudentId } = props;
@@ -17,7 +18,7 @@ const StudentsList = (props) => {
             <Grid item xs={12} lg={12}>
                 <Grid container spacing={2}>
                     {
-                        studentsList.map(studentInfo => (
+                        studentsList.length ? (studentsList.map(studentInfo => (
                             <Grid item xs={11} lg={6} key={studentInfo.id} >
                                 <StudentsListItem
                                     studentInfo={studentInfo}
@@ -25,7 +26,15 @@ const StudentsList = (props) => {
                                     handleSelectStudentId={handleSelectStudentId}
                                 />
                             </Grid>
-                        ))
+                        ))) : (<Grid
+                            container
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            sx={{ marginTop: '20%' }}
+                        >
+                            <img src={noSearchResults} alt="user details missing" />
+                        </Grid>)
                     }
                 </Grid>
             </Grid>
