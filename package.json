@@ -48,7 +48,8 @@
     "release:lin": "yarn run build && yarn run build:lin && yarn run package:lin",
     "release:win": "yarn run build && yarn run build:lin && yarn run package:win",
     "dev:old": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && SET ELECTRON_START_URL=http://localhost:3000 && electron .\"",
-    "dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && SET ELECTRON_START_URL=http://localhost:3000 && electron .\""
+    "dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && SET ELECTRON_START_URL=http://localhost:3000 && electron .\"",
+    "dev:be": "concurrently \"wait-on https://www.google.com/ && SET ELECTRON_START_URL=https://www.google.com/ && electron .\""
   },
   "eslintConfig": {
     "extends": [

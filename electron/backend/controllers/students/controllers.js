@@ -1,17 +1,20 @@
 const studentServices = require('./services');
+const attendanceServices = require('../attendance/services');
 
 module.exports = (app) => {
 
     const {
         utils: {
-            dateUtils,
             errors: {
                 types: { MicroserviceError },
                 codes: {
                     student: {
                         STUDENT_EXIST,
                         STUDENT_INACTIVE,
-                        STUDENT_DOES_NOT_EXIST
+                        STUDENT_DOES_NOT_EXIST,
+                        STUDENT_IS_PRESENT,
+                        STUDENT_IS_ABSENT,
+                        FAILED_CLOCK_IN
                     }
                 }
             }
@@ -19,16 +22,13 @@ module.exports = (app) => {
     } = app
 
     const students = studentServices(app);
+    const attendanceService = attendanceServices(app);
 
     const getAllStudentsByFilter = async (req, res, next) => {
         const { page, limit, search, course, admission, graduation, presence } = req.query;
         const id = await students.getAllStudentsByFilter({ page, limit, search, course, admission, graduation, presence });
         res.locals.data = id;
         next();
-        // admission: enum active,inactive,all
-        // graduation: enum ongoing, completed, all
-        // presence: enum present,absent, all
-
     }
 
     const createNewStudent = async (req, res, next) => {
@@ -75,7 +75,7 @@ module.exports = (app) => {
     const studentClockIn = async (req, res, next) => {
         try {
             const { clockedInAt } = req.body;
-            const { studentId } = req.query;
+            const { studentId } = req.params;
 
             const student = await students.getStudentsById(studentId);
             if (!student) {
@@ -84,36 +84,59 @@ module.exports = (app) => {
             if (!student.isActive) {
                 return next(new MicroserviceError(STUDENT_INACTIVE))
             }
-            const { start, end } = dateUtils.getStartAndEndOfDay(new Date(clockedInAt));
-
+            const studentIsPresent = await attendanceService.checkStudentIsPresent(studentId, new Date(clockedInAt));
+            if (studentIsPresent) {
+                await students.markStudentPresent(studentId);
+                return next(new MicroserviceError(STUDENT_IS_PRESENT));
+            }
 
             const createParams = {
-                name: reqBody.name,
-                gender: reqBody.gender,
-                dateOfBirth: reqBody.dateOfBirth,
-                occupation: reqBody.occupation,
-                email: reqBody.contactInfo.email,
-                phone: reqBody.contactInfo.phone,
-                addressLine1: reqBody.contactInfo.addressLine1,
-                addressLine2: reqBody.contactInfo.addressLine2,
-                pin: reqBody.contactInfo.pin,
-                course: reqBody.courseInfo.course,
-                dateOfAdmission: reqBody.courseInfo.dateOfAdmission,
-                nameOfGaurdian: reqBody.gaurdianInfoSchema.nameOfGaurdian,
-                phoneOfGaurdian: reqBody.gaurdianInfoSchema.phoneOfGaurdian,
+                studentId,
+                clockedInAt: new Date(clockedInAt)
             }
-            const id = await students.createNewAttendance(createParams);
+            const id = await attendanceService.createNewAttendance(createParams);
+
+            if (!id) {
+                return next(new MicroserviceError(FAILED_CLOCK_IN))
+            }
+            await students.markStudentPresent(studentId);
             res.locals.data = id;
             next();
         } catch (error) {
             next(error)
         }
-
     }
 
+    const studentClockOut = async (req, res, next) => {
+        try {
+            const { clockedOutAt } = req.body;
+            const { studentId } = req.params;
+
+            const student = await students.getStudentsById(studentId);
+            if (!student) {
+                return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
+            }
+            if (!student.isActive) {
+                return next(new MicroserviceError(STUDENT_INACTIVE))
+            }
+            const currentAttendance = await attendanceService.checkStudentIsPresent(studentId, new Date(clockedOutAt));
+            if (!currentAttendance) {
+                return next(new MicroserviceError(STUDENT_IS_ABSENT));
+            }
+
+            await attendanceService.updateClockedOut(currentAttendance.id,new Date(clockedOutAt));
+
+            await students.markStudentAbsent(studentId);
+            res.locals.data = currentAttendance.id;
+            next();
+        } catch (error) {
+            next(error)
+        }
+    }
     return {
         createNewStudent,
         studentClockIn,
+        studentClockOut,
         getAllStudentsByFilter
     }
 }

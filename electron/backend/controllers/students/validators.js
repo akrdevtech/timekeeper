@@ -42,12 +42,22 @@ const studentClockIn = {
     body: Joi.object({
         clockedInAt: Joi.date().required(),
     }),
-    query : Joi.object({
+    params : Joi.object({
+        studentId: Joi.string().uuid().required(),
+    })
+}
+
+const studentClockOut = {
+    body: Joi.object({
+        clockedOutAt: Joi.date().required(),
+    }),
+    params : Joi.object({
         studentId: Joi.string().uuid().required(),
     })
 }
 
 module.exports = {
     createNewStudent,
-    studentClockIn
+    studentClockIn,
+    studentClockOut
 };

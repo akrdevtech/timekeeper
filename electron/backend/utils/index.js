@@ -12,6 +12,6 @@ module.exports = {
   globalRequestInterceptor: requestHandler(),
   globalErrorHandler: erroreHandlerUtil(),
   errors: errorUtil,
-  dateUtils: dateUtils,
+  dateUtils: dateUtils(),
   logger: logger(),
 }

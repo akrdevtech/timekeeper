@@ -57,7 +57,7 @@ module.exports = (app) => {
             })
         }
         if (course != null) {
-            query[Op.and].push({ course:{[Op.in]: [course]} });
+            query[Op.and].push({ course: { [Op.in]: [course] } });
         }
         if (admission != null) {
             query[Op.and].push({ isActive: admission === 'active' })
@@ -77,11 +77,29 @@ module.exports = (app) => {
 
     }
 
+    const markStudentPresent = async (studentId) => {
+        return await Students.update({ isPresent: true }, {
+            where: {
+                id: studentId
+            }
+        });
+    }
+
+    const markStudentAbsent = async (studentId) => {
+        return await Students.update({ isPresent: false }, {
+            where: {
+                id: studentId
+            }
+        });
+    }
+
     return {
         createNewStudent,
         getStudentsById,
         getStudentsByEmail,
         getStudentsByAdmissionNumber,
-        getAllStudentsByFilter
+        getAllStudentsByFilter,
+        markStudentPresent,
+        markStudentAbsent,
     }
 }

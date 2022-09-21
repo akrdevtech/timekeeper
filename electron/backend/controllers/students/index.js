@@ -15,9 +15,13 @@ module.exports = (app) => {
         validatorMiddleware(studentValidators.createNewStudent),
         student.createNewStudent,
     ]);
-    router.post('/:studentId/attendance', [
+    router.post('/:studentId/clock-in', [
         validatorMiddleware(studentValidators.studentClockIn),
-        student.createNewStudent,
+        student.studentClockIn,
+    ]);
+    router.post('/:studentId/clock-out', [
+        validatorMiddleware(studentValidators.studentClockOut),
+        student.studentClockOut,
     ]);
 
     return router;
