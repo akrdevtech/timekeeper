@@ -1,13 +1,16 @@
-import { Button, Grid,  IconButton, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Button, Grid, IconButton, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import dateUtils from '../../../../../../../../utils/dateHelpers'
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import CalendarDateButtons from './components/CalendarDateButtons';
 import CalendarHeading from './components/CalendarHeading';
+import { StudentContext } from '../../../../../../Store';
+import StudentActions from '../../../../../../Actions';
 
-const getWeeksLayout = (year, month) => {
+const getWeeksLayout = (year, month, selectedMonthAttendance) => {
+    const clockIns = selectedMonthAttendance.map(dateAttendance => new Date(dateAttendance.clockedInAt).setHours(0, 0, 0, 0));
     const relativeStart = new Date(year, month, 1)
     const firstDay = new Date(relativeStart.getFullYear(), relativeStart.getMonth(), 1);
     const lastDay = new Date(relativeStart.getFullYear(), relativeStart.getMonth() + 1, 0);
@@ -25,8 +28,13 @@ const getWeeksLayout = (year, month) => {
     for (let index = 1; index < 43; index++) {
         const elem = {
             label: index,
-            date: new Date(year, month, index),
+            date: new Date(year, month, index).setHours(0, 0, 0, 0),
             active: false,
+        }
+        if (index <= numberOfDays) {
+            const dataIndex = clockIns.indexOf(elem.date);
+            elem.active = dataIndex > -1;
+            elem.data = selectedMonthAttendance[dataIndex];
         }
         if (index > numberOfDays) {
             elem.label = <FiberManualRecordIcon fontSize='small' sx={{ color: "#ddd" }} />
@@ -51,20 +59,51 @@ const getWeeksLayout = (year, month) => {
 }
 
 const AttendanceCalendar = (props) => {
+    const [state, dispatch] = useContext(StudentContext);
 
+    const {
+        selectedStudentAttendance: {
+            selectedYear,
+            selectedMonth,
+            selectedMonthAttendance,
+            selectedDate,
+            clockedIn,
+            clockedOut,
+            totalAttendance,
+            thisMonthAttendance,
+        }
+    } = state;
     const { size } = props;
 
-    const today = new Date();
-    const [thisYear, setThisYear] = useState(today.getFullYear());
-    const [thisMonth, setThisMonth] = useState(today.getMonth());
-    const [monthData, setThisMonthData] = useState(getWeeksLayout(thisYear, thisMonth));
+    const [monthData, setThisMonthData] = useState(getWeeksLayout(selectedYear, selectedMonth, selectedMonthAttendance));
 
     const handleYearChange = (newYear) => {
-        setThisYear(newYear);
+        dispatch({
+            type: StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.CHANGE_YEAR,
+            payload: {
+                year: newYear,
+            }
+        });
     }
 
     const handleMonthChange = (newMonth) => {
-        setThisMonth(newMonth);
+        dispatch({
+            type: StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.CHANGE_MONTH,
+            payload: {
+                month: newMonth,
+            }
+        });
+    }
+
+    const handleDateChange = (date, dateData) => {
+        dispatch({
+            type: StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.SELECT_DATE,
+            payload: {
+                selectedDate: new Date(date),
+                clockedIn: dateData && dateData.clockedInAt ? dateUtils.formatLocaleTimeString(dateData.clockedInAt) : null,
+                clockedOut: dateData && dateData.clockedOutAt ? dateUtils.formatLocaleTimeString(dateData.clockedOutAt) : null,
+            }
+        });
     }
 
     const [monthMenuAnchor, setMonthMenuAnchor] = React.useState(null);
@@ -76,7 +115,7 @@ const AttendanceCalendar = (props) => {
         setMonthMenuAnchor(null);
     };
     const selectMonth = (monthIndex) => {
-        setThisMonth(monthIndex);
+        handleMonthChange(monthIndex);
         handleCloseMonthSelector();
     }
     const monthSelectorOpen = Boolean(monthMenuAnchor);
@@ -94,8 +133,8 @@ const AttendanceCalendar = (props) => {
 
     useEffect(() => {
         console.log("Use effect triggered")
-        setThisMonthData(getWeeksLayout(thisYear, thisMonth))
-    }, [thisYear, thisMonth])
+        setThisMonthData(getWeeksLayout(selectedYear, selectedMonth, selectedMonthAttendance))
+    }, [selectedYear, selectedMonth, selectedMonthAttendance])
 
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -105,15 +144,15 @@ const AttendanceCalendar = (props) => {
                         <Grid container direction="row" justifyContent="center" alignItems="center" >
                             <Grid item xs={6} lg={6}>
                                 <Grid container direction="row" justifyContent="center" alignItems="center" >
-                                    <IconButton onClick={() => handleYearChange(thisYear - 1)}>
+                                    <IconButton onClick={() => handleYearChange(selectedYear - 1)}>
                                         <ArrowLeftIcon />
                                     </IconButton>
                                     <Button onClick={handleYearSelector}>
                                         <Typography variant='body1' color="textPrimary">
-                                            <b>{thisYear}</b>
+                                            <b>{selectedYear}</b>
                                         </Typography>
                                     </Button>
-                                    <IconButton onClick={() => handleYearChange(thisYear + 1)} >
+                                    <IconButton onClick={() => handleYearChange(selectedYear + 1)} >
                                         <ArrowRightIcon />
                                     </IconButton>
                                     <Menu
@@ -125,7 +164,7 @@ const AttendanceCalendar = (props) => {
                                         <TextField
                                             sx={{ width: 70 }}
                                             size="small"
-                                            value={thisYear}
+                                            value={selectedYear}
                                             onChange={(e) => handleYearChange(e.target.value)}>
                                         </TextField>
                                     </Menu>
@@ -133,15 +172,15 @@ const AttendanceCalendar = (props) => {
                             </Grid>
                             <Grid item xs={6} lg={6}>
                                 <Grid container direction="row" justifyContent="center" alignItems="center" >
-                                    <IconButton disabled={thisMonth === 0} onClick={() => handleMonthChange(thisMonth - 1)}>
+                                    <IconButton disabled={selectedMonth === 0} onClick={() => handleMonthChange(selectedMonth - 1)}>
                                         <ArrowLeftIcon />
                                     </IconButton>
                                     <Button onClick={handleMonthSelector}>
                                         <Typography variant='body1' color="textPrimary">
-                                            <b>{dateUtils.getMonthName(thisMonth).part}</b>
+                                            <b>{dateUtils.getMonthName(selectedMonth).part}</b>
                                         </Typography>
                                     </Button>
-                                    <IconButton disabled={thisMonth === 11} onClick={() => handleMonthChange(thisMonth + 1)}>
+                                    <IconButton disabled={selectedMonth === 11} onClick={() => handleMonthChange(selectedMonth + 1)}>
                                         <ArrowRightIcon />
                                     </IconButton>
                                     <Menu
@@ -154,7 +193,7 @@ const AttendanceCalendar = (props) => {
                                             Array.from(Array(12).keys())
                                                 .map(
                                                     index =>
-                                                        <MenuItem onClick={() => selectMonth(index)}>
+                                                        <MenuItem onClick={() => selectMonth(index)} key={index}>
                                                             {dateUtils.getMonthName(index).part}
                                                         </MenuItem>
                                                 )
@@ -168,16 +207,18 @@ const AttendanceCalendar = (props) => {
                                         <tr>
                                             <CalendarHeading size={size} />
                                         </tr>
-                                        {monthData.map(weeks => (
-                                            <tr>
-                                                {weeks.map(weekDays =>
-                                                    <td>
+                                        {monthData.map((weeks, i) => (
+                                            <tr key={i.toString()}>
+                                                {weeks.map((weekDays, j) =>
+                                                    <td key={j.toString()}>
                                                         <CalendarDateButtons
                                                             label={weekDays.label}
                                                             active={weekDays.active}
                                                             size={size}
-                                                            handleDateClick={(d) => console.log(d)}
+                                                            handleClick={(d, dataValue) => handleDateChange(d, dataValue)}
+                                                            handleDoubleClick={(d, dataValue) => console.log(d)}
                                                             date={weekDays.date}
+                                                            data={weekDays.data}
                                                         />
                                                     </td>
                                                 )}

@@ -83,6 +83,17 @@ const StudentReducer = (state, action) => {
                 ...state,
                 selectedStudentId: action.payload.selectedStudentId,
                 selectedStudentInfo: action.payload.selectedStudentInfo,
+                studentDetailsActiveTab: action.payload.activeTabName,
+                selectedStudentAttendance: {
+                    selectedYear: new Date().getFullYear(),
+                    selectedMonth: new Date().getMonth(),
+                    selectedMonthAttendance: [],
+                    selectedDate: null,
+                    clockedIn: null,
+                    clockedOut: null,
+                    totalAttendance: 0,
+                    thisMonthAttendance: 0,
+                }
             };
         case StudentActions.STUNDENT_LIST_FILTER_TRAY.TOGGLE:
             return {
@@ -114,6 +125,45 @@ const StudentReducer = (state, action) => {
                 ...state,
                 refreshStudentList: true,
                 selectedStudentInfo: action.payload.studentData,
+            }
+        case StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.CHANGE_YEAR:
+            return {
+                ...state,
+                selectedStudentAttendance: {
+                    ...state.selectedStudentAttendance,
+                    selectedYear: action.payload.year
+                },
+            }
+        case StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.CHANGE_MONTH:
+            return {
+                ...state,
+                selectedStudentAttendance: {
+                    ...state.selectedStudentAttendance,
+                    selectedMonth: action.payload.month
+                },
+            }
+        case StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.SET_ATTENDANCE:
+            return {
+                ...state,
+                selectedStudentAttendance: {
+                    ...state.selectedStudentAttendance,
+                    selectedMonthAttendance: action.payload.selectedMonthAttendance,
+                    totalAttendance: action.payload.totalAttendance,
+                    selectedDate: action.payload.selectedDate,
+                    clockedIn: action.payload.clockedIn,
+                    clockedOut: action.payload.clockedOut,
+                    thisMonthAttendance: action.payload.thisMonthAttendance,
+                },
+            }
+        case StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.SELECT_DATE:
+            return {
+                ...state,
+                selectedStudentAttendance: {
+                    ...state.selectedStudentAttendance,
+                    selectedDate: action.payload.selectedDate,
+                    clockedIn: action.payload.clockedIn,
+                    clockedOut: action.payload.clockedOut,
+                },
             }
         default:
             return state;

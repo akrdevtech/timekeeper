@@ -1,7 +1,5 @@
 import React, { useContext } from 'react'
-import { Grid, Avatar, Typography, IconButton, useTheme, Badge, Menu, MenuItem } from '@mui/material'
-import LogoutIcon from '@mui/icons-material/Logout';
-import LoginIcon from '@mui/icons-material/Login';
+import { Grid, Avatar, Typography, IconButton, useTheme, Menu, MenuItem, Tooltip } from '@mui/material'
 import AlarmAddIcon from '@mui/icons-material/AlarmAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -12,6 +10,8 @@ import brandLogo from '../../../../../../assets/images/brand/logo_white.png'
 import { StudentContext } from '../../../../Store';
 import studentApis from '../../../../../../api/studentServices';
 import StudentActions from '../../../../Actions';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
 const StudentProfileHeader = (props) => {
     const theme = useTheme();
@@ -84,17 +84,21 @@ const StudentProfileHeader = (props) => {
                     <Grid item xs={12} lg={3}>
                         <Grid container direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={12} lg={4}>
-                                <IconButton
-                                    aria-label="logout"
-                                    color='primary'
-                                    disabled={!selectedStudentInfo.isActive}
-                                    onClick={handleClockInOut}>
-                                    {selectedStudentInfo.isPresent ? <LogoutIcon /> : <LoginIcon />}
-                                </IconButton>
+                                <Tooltip title={selectedStudentInfo.isPresent ? "Log Out" : "Log In"} placement="bottom">
+                                    <IconButton
+                                        aria-label="logout"
+                                        color='primary'
+                                        disabled={!selectedStudentInfo.isActive}
+                                        onClick={handleClockInOut}>
+                                        {selectedStudentInfo.isPresent ? <PersonRemoveIcon /> : <PersonAddIcon />}
+                                    </IconButton>
+                                </Tooltip>
                             </Grid>
                             <Grid item xs={12} lg={4} color='primary'>
-                                <IconButton aria-label="addtime" disabled={!selectedStudentInfo.isPresent}>
-                                    <AlarmAddIcon />
+                                <IconButton color='primary' disabled={!selectedStudentInfo.isPresent}>
+                                    <Tooltip title="Add New Task" placement="bottom">
+                                        <AlarmAddIcon />
+                                    </Tooltip>
                                 </IconButton>
                             </Grid>
                             <Grid item xs={12} lg={4} >

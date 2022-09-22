@@ -44,6 +44,7 @@ const StudentManager = () => {
             payload: {
                 selectedStudentId: thisStudentId,
                 selectedStudentInfo: thisStudent,
+                activeTabName: 'profile'
             }
         });
     }

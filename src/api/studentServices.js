@@ -177,10 +177,32 @@ const studentClockOut = (studentId, date = new Date().toISOString()) => {
     })
 }
 
+const getMonthAttendanceOverview = (studentId, year, month) => {
+    return api.get(`/students/${studentId}/attendance?year=${year}&month=${month}`).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const attendance = data.data;
+                console.log({ attendance });
+                return attendance;
+            }
+            console.log('No response data');
+            return { total: 0, thisMonth: [] };
+        }
+        console.log('Error occured while communicating with api');
+        return null;
+    })
+}
+
 const studentApis = {
     getStudentsList,
     createNewStudent,
     studentClockIn,
-    studentClockOut
+    studentClockOut,
+    getMonthAttendanceOverview,
 }
 export default studentApis;

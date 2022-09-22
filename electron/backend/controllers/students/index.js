@@ -31,7 +31,10 @@ module.exports = (app) => {
         validatorMiddleware(studentValidators.deactivateStudent),
         student.deactivateStudent,
     ]);
-
+    router.get('/:studentId/attendance', [
+        validatorMiddleware(studentValidators.attendanceOverview),
+        student.getAttendanceOverview,
+    ]);
     return router;
 };
 

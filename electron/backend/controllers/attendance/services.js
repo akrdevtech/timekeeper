@@ -58,12 +58,36 @@ module.exports = (app) => {
         })
     }
 
-    const updateAttendanceTimingsById = async (id, clockedInAt = new Date(), clockedOutAt = new Date) => {
+    const updateAttendanceTimingsById = async (id, clockedInAt = new Date(), clockedOutAt = new Date()) => {
         return await Attendances.update({ clockedOutAt: new Date(clockedOutAt), clockedInAt: new Date(clockedInAt) }, {
             where: {
                 id: id
             }
         });
+    }
+
+    const getAttendanceOverview = async (studentId, month, year) => {
+        const total = await Attendances.count({ where: { studentId } });
+        const startOfMonth = new Date(year, month, 1, 0, 0, 0, 0);
+        const endOfMonth = new Date(startOfMonth.getFullYear(), startOfMonth.getMonth() + 1, 0, 23, 59, 59);
+        console.log({ studentId, startOfMonth, endOfMonth });
+        const thisMonth = await Attendances.findAll({
+            where: {
+                [Op.and]: [
+                    { studentId },
+                    {
+                        clockedInAt: {
+                            [Op.between]: [startOfMonth, endOfMonth]
+                        }
+                    }
+                ]
+            }
+        })
+
+        return {
+            total: total || 0,
+            thisMonth,
+        }
     }
     return {
         createNewAttendance,
@@ -71,5 +95,6 @@ module.exports = (app) => {
         updateClockedOut,
         getClockOutMissingRecords,
         updateAttendanceTimingsById,
+        getAttendanceOverview
     }
 }

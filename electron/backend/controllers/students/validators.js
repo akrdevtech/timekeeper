@@ -68,10 +68,21 @@ const deactivateStudent = {
     })
 }
 
+const attendanceOverview = {
+    params: Joi.object({
+        studentId: Joi.string().uuid().required(),
+    }),
+    query: Joi.object({
+        month: Joi.string().required(),
+        year: Joi.string().required(),
+    })
+}
+
 module.exports = {
     createNewStudent,
     studentClockIn,
     studentClockOut,
     activateStudent,
-    deactivateStudent
+    deactivateStudent,
+    attendanceOverview
 };

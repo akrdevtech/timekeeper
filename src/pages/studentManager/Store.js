@@ -1,12 +1,22 @@
 import React, { createContext, useReducer } from "react";
 import StudentReducer from './Reducer'
 
-
+const today = new Date();
 const initialState = {
     studentsList: [],
     refreshStudentList: false,
     selectedStudentId: undefined,
     selectedStudentInfo: undefined,
+    selectedStudentAttendance: {
+        selectedYear: today.getFullYear(),
+        selectedMonth: today.getMonth(),
+        selectedMonthAttendance: [],
+        selectedDate: null,
+        clockedIn: null,
+        clockedOut: null,
+        totalAttendance: 0,
+        thisMonthAttendance: 0,
+    },
     isAddStudentWizardOpen: false,
     studentListPagination: {
         page: 0,

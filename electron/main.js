@@ -23,6 +23,7 @@ function createWindow () {
      });
   
   mainWindow.setMenu(null)
+  mainWindow.maximize()
   mainWindow.loadURL(startUrl);
   // Open the DevTools.
   mainWindow.webContents.openDevTools()

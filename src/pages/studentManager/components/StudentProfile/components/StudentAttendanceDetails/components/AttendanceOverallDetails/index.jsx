@@ -1,9 +1,19 @@
-import { Grid, Paper, Typography } from '@mui/material'
-import React from 'react'
+import { Grid, Paper, Typography, useTheme } from '@mui/material'
+import React, { useContext } from 'react'
+import { StudentContext } from '../../../../../../Store';
+import dateHelpers from '../../../../../../../../utils/dateHelpers';
 
 const AttendanceOverallDetails = () => {
-    const totalAttendance = 123;
-    const thisMonth = 12;
+    const theme = useTheme();
+    const [state] = useContext(StudentContext);
+    const { selectedStudentAttendance: {
+        selectedDate,
+        clockedIn,
+        clockedOut,
+        totalAttendance,
+        thisMonthAttendance,
+    }, } = state;
+
     return (
         <Grid container direction="row" justifyContent="space-between" alignItems="center" sx={{ marginTop: 1 }} spacing={2}>
             <Grid item xs={6}>
@@ -15,20 +25,18 @@ const AttendanceOverallDetails = () => {
             <Grid item xs={6}>
                 <Paper elevation={0} sx={{ backgroundColor: "#F5F8FB", borderRadius: 2, padding: 2, textAlign: 'center' }} >
                     <Typography variant='body1' color="textSecondary" sx={{ paddingBottom: 1 }}><b>Log Timings</b></Typography>
-                    <Typography color="textSecondary" align='start'>
-                        <table sx={{ width: "100%" }}>
-                            <tbody sx={{ width: "100%" }}>
-                                <tr><td><b>Day</b></td><td> : </td><td>Jan 12, 2022</td></tr>
-                                <tr><td><b>In</b></td><td> : </td><td>08:46 am</td></tr>
-                                <tr><td><b>Out</b></td><td> : </td><td>03:30 pm</td></tr>
-                            </tbody>
-                        </table>
-                    </Typography>
+                    <table style={{ width: "100%", textAlign: 'left', color: theme.palette.text.secondary }}>
+                        <tbody>
+                            <tr><td><b>Day</b></td><td> : </td><td>{selectedDate ? dateHelpers.formatAsPartDate(selectedDate) : 'MM dd,YYYY'}</td></tr>
+                            <tr><td><b>In</b></td><td> : </td><td>{clockedIn}</td></tr>
+                            <tr><td><b>Out</b></td><td> : </td><td>{clockedOut}</td></tr>
+                        </tbody>
+                    </table>
                 </Paper>
             </Grid>
             <Grid item xs={12}>
                 <Paper elevation={0} sx={{ backgroundColor: "#F5F8FB", borderRadius: 2, padding: 2, textAlign: 'center' }} >
-                    <Typography variant='body1' color="textSecondary"><b>This Month : </b>{thisMonth}</Typography>
+                    <Typography variant='body1' color="textSecondary"><b>This Month : </b>{thisMonthAttendance}</Typography>
                 </Paper>
             </Grid>
         </Grid>

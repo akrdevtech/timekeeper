@@ -170,6 +170,22 @@ module.exports = (app) => {
             next(error)
         }
     }
+
+    const getAttendanceOverview = async (req, res, next) => {
+        try {
+            const { studentId } = req.params;
+            const { month, year } = req.query;
+            const student = await students.getStudentsById(studentId);
+            if (!student) {
+                return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
+            }
+            const overview = await attendanceService.getAttendanceOverview(studentId, month, year);
+            res.locals.data = overview;
+            next();
+        } catch (error) {
+            next(error)
+        }
+    }
     return {
         createNewStudent,
         studentClockIn,
@@ -177,6 +193,7 @@ module.exports = (app) => {
         getAllStudentsByFilter,
         activateStudent,
         deactivateStudent,
+        getAttendanceOverview
     }
 }
 
