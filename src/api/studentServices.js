@@ -1,39 +1,46 @@
 import api from "./httpApi";
 
-const formatDataToStudentList = (rows = []) => {
-    const response = rows.map(row => {
+const studentsDTO = (data, mode) => {
+    if (mode === 'from') {
         return {
-            id: row.id,
-            name: row.name,
-            gender: row.gender,
-            dateOfBirth: row.dateOfBirth,
-            occupation: row.occupation,
-            isPresent: row.isPresent,
-            isActive: row.isActive,
+            id: data.id,
+            name: data.name,
+            gender: data.gender,
+            dateOfBirth: data.dateOfBirth,
+            occupation: data.occupation,
+            isPresent: data.isPresent,
+            isActive: data.isActive,
             contactInfo: {
-                email: row.email,
-                phone: row.phone,
-                addressLine1: row.addressLine1,
-                addressLine2: row.addressLine2,
-                pin: row.pin,
+                email: data.email,
+                phone: data.phone,
+                addressLine1: data.addressLine1,
+                addressLine2: data.addressLine2,
+                pin: data.pin,
             },
             courseInfo: {
-                course: row.course,
-                dateOfAdmission: row.dateOfAdmission,
-                admissionNumber: row.admissionNumber,
+                course: data.course,
+                dateOfAdmission: data.dateOfAdmission,
+                admissionNumber: data.admissionNumber,
             },
             gaurdianInfo: {
-                nameOfGaurdian: row.nameOfGaurdian,
-                phoneOfGaurdian: row.phoneOfGaurdian,
+                nameOfGaurdian: data.nameOfGaurdian,
+                phoneOfGaurdian: data.phoneOfGaurdian,
             },
             performanceInfo: {
-                listening: Number(row.performanceListening),
-                speaking: Number(row.performanceSpeaking),
-                reading: Number(row.performanceReading),
-                writing1: Number(row.performanceWriting1),
-                writing2: Number(row.performanceWriting2),
+                listening: Number(data.performanceListening),
+                speaking: Number(data.performanceSpeaking),
+                reading: Number(data.performanceReading),
+                writing1: Number(data.performanceWriting1),
+                writing2: Number(data.performanceWriting2),
             }
         }
+    } else {
+        return data;
+    }
+}
+const formatDataToStudentList = (rows = []) => {
+    const response = rows.map(row => {
+        return studentsDTO(row, 'from');
     })
     return response;
 }
@@ -52,7 +59,7 @@ const getStudentsList = async (page, limit, appliedStudentListFilters) => {
         url = `${url}&presence=${presence}`
     }
     if (course !== 'any' && !course.includes('any')) {
-        course.map(cid=>{
+        course.map(cid => {
             return url = `${url}&course=${cid}`
         })
     }
@@ -127,8 +134,53 @@ const createNewStudent = async (createParams) => {
     })
 }
 
+const studentClockIn = (studentId, date = new Date().toISOString()) => {
+    return api.post(`/students/${studentId}/clock-in`, { clockedInAt: date }).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const studentInfo = data.data;
+                const studentData = studentsDTO(studentInfo, 'from');
+                return studentData;
+            }
+            console.log('No response data');
+            return {};
+        }
+        console.log('Error occured while communicating with api');
+        return null;
+    })
+}
+
+const studentClockOut = (studentId, date = new Date().toISOString()) => {
+    return api.patch(`/students/${studentId}/clock-out`, { clockedOutAt: date }).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const studentInfo = data.data;
+                console.log({ studentInfo });
+                const studentData = studentsDTO(studentInfo, 'from');
+                return studentData;
+            }
+            console.log('No response data');
+            return {};
+        }
+        console.log('Error occured while communicating with api');
+        return null;
+    })
+}
+
 const studentApis = {
     getStudentsList,
     createNewStudent,
+    studentClockIn,
+    studentClockOut
 }
 export default studentApis;

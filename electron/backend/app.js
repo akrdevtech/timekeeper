@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
+const initialLoaders = require('./jobs/initialLoaders');
 
 const controllers = require('./controllers');
 const utilities = require('./utils');
@@ -37,6 +38,7 @@ app.utils = utilities;
 
 app.use('/api/', controllers(app));
 
+
 app.use(utilities.globalErrorHandler);
 app.use(utilities.globalReponseHandler.responseHandler);
 
@@ -62,5 +64,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+initialLoaders(app).markMissingAttendance();
 
 module.exports = app;

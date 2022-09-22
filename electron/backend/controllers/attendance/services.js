@@ -46,9 +46,30 @@ module.exports = (app) => {
             }
         });
     }
+
+    const getClockOutMissingRecords = async (date) => {
+        return await Attendances.findAll({
+            where: {
+                [Op.and]: [
+                    { clockedInAt: { [Op.lt]: new Date(date) } },
+                    { clockedOutAt: null }
+                ]
+            }
+        })
+    }
+
+    const updateAttendanceTimingsById = async (id, clockedInAt = new Date(), clockedOutAt = new Date) => {
+        return await Attendances.update({ clockedOutAt: new Date(clockedOutAt), clockedInAt: new Date(clockedInAt) }, {
+            where: {
+                id: id
+            }
+        });
+    }
     return {
         createNewAttendance,
         checkStudentIsPresent,
         updateClockedOut,
+        getClockOutMissingRecords,
+        updateAttendanceTimingsById,
     }
 }

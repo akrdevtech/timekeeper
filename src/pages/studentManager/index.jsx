@@ -21,7 +21,8 @@ const StudentManager = () => {
         selectedStudentInfo,
         snackBarAttributes,
         appliedStudentListFilters,
-        studentDetailsActiveTab
+        studentDetailsActiveTab,
+        refreshStudentList
     } = state;
 
     const changeStudentDetailsActiveTab = (activeTabName) => {
@@ -55,7 +56,8 @@ const StudentManager = () => {
                 type: StudentActions.STUDENTS_LIST.GET_UPDATED,
                 payload: {
                     pagination: { page, limit, totalPages: Math.ceil(count / limit) },
-                    studentsList: rows
+                    studentsList: rows,
+                    refreshStudentList: false,
                 }
             });
         });
@@ -108,7 +110,7 @@ const StudentManager = () => {
     useEffect(() => {
         setSearchText(appliedStudentListFilters.search)
         getUpdatedStudentList();
-    }, [appliedStudentListFilters, studentListPagination.page])
+    }, [appliedStudentListFilters, studentListPagination.page, refreshStudentList === true])
 
 
     return (

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Grid, Avatar, Typography, IconButton, useTheme, Badge, Menu, MenuItem } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
@@ -9,11 +9,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import brandLogo from '../../../../../../assets/images/brand/logo_white.png'
+import { StudentContext } from '../../../../Store';
+import studentApis from '../../../../../../api/studentServices';
+import StudentActions from '../../../../Actions';
 
 const StudentProfileHeader = (props) => {
     const theme = useTheme();
-    const { selectedStudentInfo } = props;
-    const name = selectedStudentInfo ? selectedStudentInfo.name : "RPTC";
+    const [state, dispatch] = useContext(StudentContext);
+    const { selectedStudentInfo } = state;
+
+    const name = selectedStudentInfo ? selectedStudentInfo.name : "RPTCx";
     const admissionNumber = selectedStudentInfo ? selectedStudentInfo.courseInfo.admissionNumber : "CENTRE FOR LANGUAGE STUDIES";
     const course = selectedStudentInfo ? selectedStudentInfo.courseInfo.course : "Powered by: AceCodeWiz";
     const profilePic = selectedStudentInfo ? selectedStudentInfo.profilePic : brandLogo;
@@ -29,6 +34,33 @@ const StudentProfileHeader = (props) => {
     const selectAdditionalMenu = (mode) => {
         setAnchorEl(null);
         console.log(mode);
+    }
+
+    const handleClockInOut = () => {
+        if (selectedStudentInfo.isPresent) {
+            studentApis.studentClockOut(selectedStudentInfo.id).then(studentData => {
+                const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
+                console.log({ updatedStudent });
+                dispatch({
+                    type: StudentActions.STUDENT_DETAILS.CLOCK_OUT,
+                    payload: {
+                        studentData: updatedStudent,
+                    }
+                });
+            })
+        } else {
+            studentApis.studentClockIn(selectedStudentInfo.id).then(studentData => {
+                const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
+                console.log({ updatedStudent });
+
+                dispatch({
+                    type: StudentActions.STUDENT_DETAILS.CLOCK_IN,
+                    payload: {
+                        studentData: updatedStudent
+                    }
+                });
+            })
+        }
     }
 
     return (
@@ -52,7 +84,11 @@ const StudentProfileHeader = (props) => {
                     <Grid item xs={12} lg={3}>
                         <Grid container direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={12} lg={4}>
-                                <IconButton aria-label="logout" color='primary'>
+                                <IconButton
+                                    aria-label="logout"
+                                    color='primary'
+                                    disabled={!selectedStudentInfo.isActive}
+                                    onClick={handleClockInOut}>
                                     {selectedStudentInfo.isPresent ? <LogoutIcon /> : <LoginIcon />}
                                 </IconButton>
                             </Grid>
@@ -90,14 +126,14 @@ const StudentProfileHeader = (props) => {
                                 <IconButton aria-label="addtime">
                                     <NoAccountsIcon />
                                 </IconButton>
-                                Deactive
+                                Deactivate
                             </MenuItem>
                         ) : (
                             <MenuItem onClick={() => selectAdditionalMenu("reactive")}>
                                 <IconButton aria-label="addtime">
                                     <VerifiedUserIcon />
                                 </IconButton>
-                                Reactive
+                                Reactivate
                             </MenuItem>
                         )}
 

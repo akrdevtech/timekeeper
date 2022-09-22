@@ -37,7 +37,8 @@ const StudentReducer = (state, action) => {
             return {
                 ...state,
                 studentListPagination: action.payload.pagination,
-                studentsList: action.payload.studentsList
+                studentsList: action.payload.studentsList,
+                refreshStudentList: action.payload.refreshStudentList,
             };
         case StudentActions.STUDENT_WIZARD.ADD_STUDENT.SUCCESS:
             return {
@@ -97,11 +98,23 @@ const StudentReducer = (state, action) => {
                     ...action.payload.appliedStudentListFilters,
                 }
             }
-            case StudentActions.STUDENT_DETAILS.CHANGE_TABS:
-                return {
-                    ...state,
-                    studentDetailsActiveTab: action.payload.activeTabName,
-                }
+        case StudentActions.STUDENT_DETAILS.CHANGE_TABS:
+            return {
+                ...state,
+                studentDetailsActiveTab: action.payload.activeTabName,
+            }
+        case StudentActions.STUDENT_DETAILS.CLOCK_IN:
+            return {
+                ...state,
+                refreshStudentList: true,
+                selectedStudentInfo: action.payload.studentData,
+            }
+        case StudentActions.STUDENT_DETAILS.CLOCK_OUT:
+            return {
+                ...state,
+                refreshStudentList: true,
+                selectedStudentInfo: action.payload.studentData,
+            }
         default:
             return state;
     }

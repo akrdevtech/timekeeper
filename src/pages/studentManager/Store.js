@@ -4,6 +4,7 @@ import StudentReducer from './Reducer'
 
 const initialState = {
     studentsList: [],
+    refreshStudentList: false,
     selectedStudentId: undefined,
     selectedStudentInfo: undefined,
     isAddStudentWizardOpen: false,
@@ -26,7 +27,7 @@ const initialState = {
         search: '',
     },
     filterTrayToggle: false,
-    studentDetailsActiveTab: 'attendance'//'profile'
+    studentDetailsActiveTab: 'profile',//'attendance'
 };
 
 const StudentStore = ({ children }) => {

@@ -5,6 +5,7 @@ module.exports = (app) => {
 
     const {
         utils: {
+            logger,
             errors: {
                 types: { MicroserviceError },
                 codes: {
@@ -87,7 +88,9 @@ module.exports = (app) => {
             const studentIsPresent = await attendanceService.checkStudentIsPresent(studentId, new Date(clockedInAt));
             if (studentIsPresent) {
                 await students.markStudentPresent(studentId);
-                return next(new MicroserviceError(STUDENT_IS_PRESENT));
+                const studentData = await students.getStudentsById(studentId);
+                res.locals.data = studentData;
+                return next();
             }
 
             const createParams = {
@@ -100,7 +103,8 @@ module.exports = (app) => {
                 return next(new MicroserviceError(FAILED_CLOCK_IN))
             }
             await students.markStudentPresent(studentId);
-            res.locals.data = id;
+            const studentData = await students.getStudentsById(studentId);
+            res.locals.data = studentData;
             next();
         } catch (error) {
             next(error)
@@ -124,10 +128,11 @@ module.exports = (app) => {
                 return next(new MicroserviceError(STUDENT_IS_ABSENT));
             }
 
-            await attendanceService.updateClockedOut(currentAttendance.id,new Date(clockedOutAt));
+            await attendanceService.updateClockedOut(currentAttendance.id, new Date(clockedOutAt));
 
             await students.markStudentAbsent(studentId);
-            res.locals.data = currentAttendance.id;
+            const studentData = await students.getStudentsById(studentId);
+            res.locals.data = studentData;
             next();
         } catch (error) {
             next(error)
