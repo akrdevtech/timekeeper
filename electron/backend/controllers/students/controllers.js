@@ -133,11 +133,45 @@ module.exports = (app) => {
             next(error)
         }
     }
+
+    const activateStudent = async (req, res, next) => {
+        try {
+            const { studentId } = req.params;
+
+            const student = await students.getStudentsById(studentId);
+            if (!student) {
+                return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
+            }
+            await students.activateStudent(studentId);
+            res.locals.data = student.id;
+            next();
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    const deactivateStudent = async (req, res, next) => {
+        try {
+            const { studentId } = req.params;
+
+            const student = await students.getStudentsById(studentId);
+            if (!student) {
+                return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
+            }
+            await students.deactivateStudent(studentId);
+            res.locals.data = student.id;
+            next();
+        } catch (error) {
+            next(error)
+        }
+    }
     return {
         createNewStudent,
         studentClockIn,
         studentClockOut,
-        getAllStudentsByFilter
+        getAllStudentsByFilter,
+        activateStudent,
+        deactivateStudent,
     }
 }
 

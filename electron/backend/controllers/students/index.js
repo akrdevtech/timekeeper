@@ -19,9 +19,17 @@ module.exports = (app) => {
         validatorMiddleware(studentValidators.studentClockIn),
         student.studentClockIn,
     ]);
-    router.post('/:studentId/clock-out', [
+    router.patch('/:studentId/clock-out', [
         validatorMiddleware(studentValidators.studentClockOut),
         student.studentClockOut,
+    ]);
+    router.patch('/:studentId/activate', [
+        validatorMiddleware(studentValidators.activateStudent),
+        student.activateStudent,
+    ]);
+    router.patch('/:studentId/deactivate', [
+        validatorMiddleware(studentValidators.deactivateStudent),
+        student.deactivateStudent,
     ]);
 
     return router;

@@ -42,7 +42,7 @@ const studentClockIn = {
     body: Joi.object({
         clockedInAt: Joi.date().required(),
     }),
-    params : Joi.object({
+    params: Joi.object({
         studentId: Joi.string().uuid().required(),
     })
 }
@@ -51,7 +51,19 @@ const studentClockOut = {
     body: Joi.object({
         clockedOutAt: Joi.date().required(),
     }),
-    params : Joi.object({
+    params: Joi.object({
+        studentId: Joi.string().uuid().required(),
+    })
+}
+
+const activateStudent = {
+    params: Joi.object({
+        studentId: Joi.string().uuid().required(),
+    })
+}
+
+const deactivateStudent = {
+    params: Joi.object({
         studentId: Joi.string().uuid().required(),
     })
 }
@@ -59,5 +71,7 @@ const studentClockOut = {
 module.exports = {
     createNewStudent,
     studentClockIn,
-    studentClockOut
+    studentClockOut,
+    activateStudent,
+    deactivateStudent
 };

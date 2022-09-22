@@ -78,19 +78,19 @@ module.exports = (app) => {
     }
 
     const markStudentPresent = async (studentId) => {
-        return await Students.update({ isPresent: true }, {
-            where: {
-                id: studentId
-            }
-        });
+        return await Students.update({ isPresent: true }, { where: { id: studentId } });
     }
 
     const markStudentAbsent = async (studentId) => {
-        return await Students.update({ isPresent: false }, {
-            where: {
-                id: studentId
-            }
-        });
+        return await Students.update({ isPresent: false }, { where: { id: studentId } });
+    }
+
+    const activateStudent = async (studentId) => {
+        return await Students.update({ isActive: true }, { where: { id: studentId } })
+    }
+
+    const deactivateStudent = async (studentId) => {
+        return await Students.update({ isActive: false, isPresent: false }, { where: { id: studentId } })
     }
 
     return {
@@ -101,5 +101,7 @@ module.exports = (app) => {
         getAllStudentsByFilter,
         markStudentPresent,
         markStudentAbsent,
+        activateStudent,
+        deactivateStudent,
     }
 }
