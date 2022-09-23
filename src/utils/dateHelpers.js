@@ -35,7 +35,7 @@ const dateWithoutTimeIsEqual = function (date1, date2) {
 }
 
 const formatLocaleTimeString = (date = new Date()) => {
-    const localeTimeString = new Date(date).toLocaleTimeString();
+    const localeTimeString = new Date(date).toLocaleTimeString('en-IN');
     const [hours, minutes, secondsPart] = localeTimeString.split(':');
     let newHours = Number(hours) < 10 ? `0${hours}` : hours;
     let newMinutes = Number(minutes) < 10 ? `0${minutes}` : minutes;
