@@ -1,4 +1,4 @@
-import { Button, Grid, IconButton, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material'
+import { Button, Grid, IconButton, List, ListItem, Menu, MenuItem, Paper, TextField, Tooltip, Typography, useTheme } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
@@ -8,6 +8,15 @@ import CalendarDateButtons from './components/CalendarDateButtons';
 import CalendarHeading from './components/CalendarHeading';
 import { StudentContext } from '../../../../../../Store';
 import StudentActions from '../../../../../../Actions';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import dateHelpers from '../../../../../../../../utils/dateHelpers';
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import studentApis from '../../../../../../../../api/studentServices';
+import attendanceApis from '../../../../../../../../api/attendanceServices';
 
 const getWeeksLayout = (year, month, selectedMonthAttendance) => {
     const clockIns = selectedMonthAttendance.map(dateAttendance => new Date(dateAttendance.clockedInAt).setHours(0, 0, 0, 0));
@@ -60,8 +69,10 @@ const getWeeksLayout = (year, month, selectedMonthAttendance) => {
 
 const AttendanceCalendar = (props) => {
     const [state, dispatch] = useContext(StudentContext);
+    const theme = useTheme();
 
     const {
+        selectedStudentInfo,
         selectedStudentAttendance: {
             selectedYear,
             selectedMonth,
@@ -95,13 +106,27 @@ const AttendanceCalendar = (props) => {
         });
     }
 
-    const handleDateChange = (date, dateData) => {
+    const [selectedDateValues, setSelectedDateValues] = useState({
+        editClockInValue: clockedIn,
+        editClockOutValue: clockedOut,
+        studentId: selectedStudentInfo.id,
+        attendanceId: null,
+    })
+
+    const handleDateChange = (date, dateData, labelVal) => {
+        setSelectedDateValues({
+            ...selectedDateValues,
+            editClockInValue: isNaN(labelVal) ? null : dateData && dateData.clockedInAt ? dateData.clockedInAt : new Date(selectedDate).setHours(0, 0, 0, 0),
+            editClockOutValue: isNaN(labelVal) ? null : dateData && dateData.clockedOutAt ? dateData.clockedOutAt : new Date(selectedDate).setHours(0, 0, 0, 0),
+            studentId: dateData && dateData.studentId ? dateData.studentId : selectedStudentInfo.id,
+            attendanceId: dateData && dateData.id ? dateData.id : null,
+        });
         dispatch({
             type: StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.SELECT_DATE,
             payload: {
                 selectedDate: new Date(date),
-                clockedIn: dateData && dateData.clockedInAt ? dateUtils.formatLocaleTimeString(dateData.clockedInAt) : null,
-                clockedOut: dateData && dateData.clockedOutAt ? dateUtils.formatLocaleTimeString(dateData.clockedOutAt) : null,
+                clockedIn: dateData && dateData.clockedInAt ? dateData.clockedInAt : null,
+                clockedOut: dateData && dateData.clockedOutAt ? dateData.clockedOutAt : null,
             }
         });
     }
@@ -135,6 +160,75 @@ const AttendanceCalendar = (props) => {
         console.log("Use effect triggered")
         setThisMonthData(getWeeksLayout(selectedYear, selectedMonth, selectedMonthAttendance))
     }, [selectedYear, selectedMonth, selectedMonthAttendance])
+
+    const [editTimingsAnchorEl, setEditTimingsAnchorEl] = React.useState(null);
+
+    const handleOpenEditTimings = (event) => {
+        setEditTimingsAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseEditTimings = () => {
+        setEditTimingsAnchorEl(null);
+    };
+
+    const open = Boolean(editTimingsAnchorEl);
+    const id = open ? 'simple-popover' : undefined;
+
+    const handleDeleteAttendance = () => {
+        if (dateHelpers.dateWithoutTimeIsEqual(new Date(), new Date(selectedDate))) {
+            studentApis.studentClockOut(selectedStudentInfo.id).then(studentData => {
+                attendanceApis.deleteAttendance(selectedDateValues.attendanceId).then(() => {
+                    const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
+                    dispatch({
+                        type: StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.DELETE_ATTENDANCE,
+                        payload: {
+                            selectedStudentInfo: updatedStudent,
+                            refreshStudentList: true,
+                        }
+                    });
+                    handleCloseEditTimings();
+                })
+            })
+        } else {
+            attendanceApis.deleteAttendance(selectedDateValues.attendanceId).then(() => {
+                dispatch({
+                    type: StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.DELETE_ATTENDANCE,
+                    payload: {
+                        studentData: null,
+                        refreshStudentList: true,
+                    }
+                });
+                handleCloseEditTimings();
+            })
+        }
+    }
+
+    const handleUpsertAttendance = () => {
+        if (dateHelpers.dateWithoutTimeIsEqual(new Date(), new Date(selectedDate)) && !selectedDateValues.attendanceId) {
+            studentApis.studentClockIn(selectedStudentInfo.id).then(studentData => {
+                const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
+                dispatch({
+                    type: StudentActions.STUDENT_DETAILS.CLOCK_IN,
+                    payload: {
+                        studentData: updatedStudent,
+                        refreshAttendanceCalendar: true,
+                    }
+                });
+                handleCloseEditTimings();
+            })
+        } else {
+            attendanceApis.upsertAttendance(
+                selectedStudentInfo.id,
+                selectedDateValues.editClockInValue,
+                selectedDateValues.editClockOutValue,
+                selectedDateValues.attendanceId,
+            )
+                .then(() => {
+                    dispatch({ type: StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.INSERT_ATTENDANCE });
+                    handleCloseEditTimings();
+                })
+        }
+    }
 
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -215,8 +309,8 @@ const AttendanceCalendar = (props) => {
                                                             label={weekDays.label}
                                                             active={weekDays.active}
                                                             size={size}
-                                                            handleClick={(d, dataValue) => handleDateChange(d, dataValue)}
-                                                            handleDoubleClick={(d, dataValue) => console.log(d)}
+                                                            handleClick={(d, dataValue, labelVal) => handleDateChange(d, dataValue, labelVal)}
+                                                            handleDoubleClick={(e, d, dataValue) => handleOpenEditTimings(e)}
                                                             date={weekDays.date}
                                                             data={weekDays.data}
                                                         />
@@ -231,7 +325,108 @@ const AttendanceCalendar = (props) => {
                     </Grid>
                 </Grid>
             </Paper >
-        </Grid>
+            <Menu
+                id={id}
+                open={open}
+                anchorEl={editTimingsAnchorEl}
+                onClose={handleCloseEditTimings}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+            >
+                <List sx={{ width: '100%', minWidth: 300, maxWidth: 360, bgcolor: 'background.paper' }}>
+                    {(dateHelpers.dateWithoutTimeIsEqual(new Date(), new Date(selectedDate)) && !selectedDateValues.attendanceId) ?
+                        (
+                            <>
+                                <ListItem style={{ marginTop: theme.spacing(2), justifyContent: 'center' }}>
+                                    <Button
+                                        onClick={handleUpsertAttendance}
+                                        variant='outlined'
+                                        color='secondary'
+                                        startIcon={<PersonAddIcon />}
+                                    >
+                                        Log In
+                                    </Button>
+                                </ListItem>
+                                <ListItem style={{ justifyContent: 'right' }}>
+                                    <IconButton onClick={handleCloseEditTimings}>
+                                        <Tooltip title="Close Without Changes" placement="bottom">
+                                            <CloseIcon />
+                                        </Tooltip>
+                                    </IconButton>
+                                </ListItem>
+                            </>
+                        ) : (
+                            <>
+                                <ListItem >
+                                    <Typography variant="body2">
+                                        Date : <b>{selectedDate ? dateHelpers.formatAsPartDate(selectedDate) : 'MM dd,YYYY'}</b>
+                                    </Typography>
+                                </ListItem>
+
+                                <ListItem style={{ marginTop: theme.spacing(2) }}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <TimePicker
+                                            label="Clock In At"
+                                            value={selectedDateValues.editClockInValue}
+                                            onChange={(newValue) => {
+                                                setSelectedDateValues({ ...selectedDateValues, editClockInValue: new Date(newValue) });
+                                            }}
+                                            renderInput={(params) => <TextField {...params} size="small" />}
+                                        />
+                                    </LocalizationProvider>
+                                </ListItem>
+
+                                <ListItem style={{ marginTop: theme.spacing(2) }}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <TimePicker
+                                            label="Clock Out At"
+                                            value={selectedDateValues.editClockOutValue}
+                                            onChange={(newValue) => {
+                                                setSelectedDateValues({ ...selectedDateValues, editClockOutValue: new Date(newValue) });
+                                            }}
+                                            renderInput={(params) => <TextField {...params} size="small" />}
+                                        />
+                                    </LocalizationProvider>
+                                </ListItem>
+
+                                <ListItem style={{ marginTop: theme.spacing(2), justifyContent: 'right' }}>
+                                    <IconButton
+                                        onClick={handleUpsertAttendance}
+                                        disabled={!(selectedDateValues.editClockInValue && selectedDateValues.editClockOutValue)}
+                                    >
+                                        <Tooltip title="Submit Changes" placement="bottom">
+                                            <DoneIcon />
+                                        </Tooltip>
+                                    </IconButton>
+                                    <IconButton
+                                        onClick={handleDeleteAttendance}
+                                        disabled={!(
+                                            selectedDateValues.attendanceId
+                                        )}
+                                    >
+                                        <Tooltip title="Delete Attendance" placement="bottom">
+                                            <DeleteOutlineIcon />
+                                        </Tooltip>
+                                    </IconButton>
+                                    <IconButton onClick={handleCloseEditTimings}>
+                                        <Tooltip title="Close Without Changes" placement="bottom">
+                                            <CloseIcon />
+                                        </Tooltip>
+                                    </IconButton>
+                                </ListItem>
+                            </>
+                        )
+                    }
+
+                </List >
+            </Menu >
+        </Grid >
     )
 }
 

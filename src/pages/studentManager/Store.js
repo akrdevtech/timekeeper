@@ -16,6 +16,7 @@ const initialState = {
         clockedOut: null,
         totalAttendance: 0,
         thisMonthAttendance: 0,
+        refreshAttendanceCalendar: false,
     },
     isAddStudentWizardOpen: false,
     studentListPagination: {

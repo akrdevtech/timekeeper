@@ -27,11 +27,7 @@ const formatAsPartDate = (thisDate = new Date()) => {
 }
 
 const dateWithoutTimeIsEqual = function (date1, date2) {
-    const d1 = new Date(date1);
-    d1.setHours(0, 0, 0, 0);
-    const d2 = new Date(date2);
-    d2.setHours(0, 0, 0, 0);
-    return d1 === d2;
+    return new Date(date1).toLocaleDateString('en-IN') === new Date(date2).toLocaleDateString('en-IN')
 }
 
 const formatLocaleTimeString = (date = new Date()) => {
@@ -39,7 +35,7 @@ const formatLocaleTimeString = (date = new Date()) => {
     const [hours, minutes, secondsPart] = localeTimeString.split(':');
     let newHours = Number(hours) < 10 ? `0${hours}` : hours;
     let newMinutes = Number(minutes) < 10 ? `0${minutes}` : minutes;
-    const [seconds,meridiem] = secondsPart.split(" ");
+    const [seconds, meridiem] = secondsPart.split(" ");
     return `${newHours} : ${newMinutes} ${meridiem.toLowerCase()}`;
 }
 

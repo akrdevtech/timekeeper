@@ -119,6 +119,7 @@ const StudentReducer = (state, action) => {
                 ...state,
                 refreshStudentList: true,
                 selectedStudentInfo: action.payload.studentData,
+                refreshAttendanceCalendar: action.payload.refreshAttendanceCalendar || false,
             }
         case StudentActions.STUDENT_DETAILS.CLOCK_OUT:
             return {
@@ -153,6 +154,7 @@ const StudentReducer = (state, action) => {
                     clockedIn: action.payload.clockedIn,
                     clockedOut: action.payload.clockedOut,
                     thisMonthAttendance: action.payload.thisMonthAttendance,
+                    refreshAttendanceCalendar: false,
                 },
             }
         case StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.SELECT_DATE:
@@ -163,6 +165,24 @@ const StudentReducer = (state, action) => {
                     selectedDate: action.payload.selectedDate,
                     clockedIn: action.payload.clockedIn,
                     clockedOut: action.payload.clockedOut,
+                },
+            }
+        case StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.DELETE_ATTENDANCE:
+            return {
+                ...state,
+                refreshStudentList: action.payload.refreshStudentList || false,
+                selectedStudentInfo: action.payload.selectedStudentInfo || state.selectedStudentInfo,
+                selectedStudentAttendance: {
+                    ...state.selectedStudentAttendance,
+                    refreshAttendanceCalendar: true,
+                },
+            }
+        case StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.INSERT_ATTENDANCE:
+            return {
+                ...state,
+                selectedStudentAttendance: {
+                    ...state.selectedStudentAttendance,
+                    refreshAttendanceCalendar: true,
                 },
             }
         default:

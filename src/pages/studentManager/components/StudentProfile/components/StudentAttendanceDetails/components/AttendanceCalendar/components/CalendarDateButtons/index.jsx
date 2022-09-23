@@ -1,9 +1,19 @@
 import { IconButton, Typography, useTheme } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
+import dateHelpers from '../../../../../../../../../../utils/dateHelpers';
+import { StudentContext } from '../../../../../../../../Store';
 
 const CalendarDateButtons = (props) => {
     const { active, label, size, handleClick, handleDoubleClick, date, data } = props;
     const theme = useTheme();
+    const [state] = useContext(StudentContext);
+    const { selectedStudentAttendance: {
+        selectedDate,
+        selectedYear,
+    }, } = state;
+    const isSelectedDate = new Date(selectedDate).getFullYear() === selectedYear && dateHelpers.dateWithoutTimeIsEqual(selectedDate, date)
+    const clickFunction = isNaN(label)? ()=>{} : handleClick;
+    const doubleClickFunction = isNaN(label)? ()=>{} : handleDoubleClick;
     return (
         <IconButton color="secondary" sx={{
             width: size || 60,
@@ -15,9 +25,12 @@ const CalendarDateButtons = (props) => {
                 background: theme.palette.text.secondary,
                 color: "white",
             },
+            borderStyle: 'solid',
+            borderWidth: isSelectedDate ? 2 : 0,
+            borderColor: isSelectedDate ? theme.palette.primary.main : "transparent",
         }}
-            onClick={() => handleClick(date, data)}
-            onDoubleClick={() => handleDoubleClick(date, data)}
+            onClick={() => clickFunction(date, data, Number(label))}
+            onDoubleClick={(e) => doubleClickFunction(e, date, data)}
         >
             <Typography variant='caption' sx={{ fontSize: size ? (size / 5) : 12 }}>{label}</Typography>
         </IconButton>

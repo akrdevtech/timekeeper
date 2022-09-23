@@ -19,6 +19,7 @@ function StudentAttendanceDetails() {
             clockedOut,
             totalAttendance,
             thisMonthAttendance,
+            refreshAttendanceCalendar,
         },
         studentDetailsActiveTab
     } = state;
@@ -40,7 +41,7 @@ function StudentAttendanceDetails() {
                 });
             })
         }
-    }, [isAttendanceTab, selectedStudentInfo.id, selectedYear, selectedMonth])
+    }, [isAttendanceTab, selectedStudentInfo, selectedYear, selectedMonth, refreshAttendanceCalendar])
 
     return (
         <>

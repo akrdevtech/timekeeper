@@ -28,8 +28,8 @@ const AttendanceOverallDetails = () => {
                     <table style={{ width: "100%", textAlign: 'left', color: theme.palette.text.secondary }}>
                         <tbody>
                             <tr><td><b>Day</b></td><td> : </td><td>{selectedDate ? dateHelpers.formatAsPartDate(selectedDate) : 'MM dd,YYYY'}</td></tr>
-                            <tr><td><b>In</b></td><td> : </td><td>{clockedIn}</td></tr>
-                            <tr><td><b>Out</b></td><td> : </td><td>{clockedOut}</td></tr>
+                            <tr><td><b>In</b></td><td> : </td><td>{clockedIn?dateHelpers.formatLocaleTimeString(clockedIn):null}</td></tr>
+                            <tr><td><b>Out</b></td><td> : </td><td>{clockedOut?dateHelpers.formatLocaleTimeString(clockedOut):null}</td></tr>
                         </tbody>
                     </table>
                 </Paper>

@@ -88,12 +88,42 @@ module.exports = (app) => {
             thisMonth,
         }
     }
+
+    const getAttendanceById = async (attendanceId) => {
+        const attendanceData = await Attendances.findByPk(attendanceId);
+        return attendanceData;
+    }
+
+    const deleteAttendanceById = async (attendanceId) => {
+        const attendanceData = await Attendances.destroy({
+            where: {
+                id: attendanceId
+            }
+        });
+        return attendanceData;
+    }
+
+    const updateAttendance = async (attendanceId, updateParams) => {
+        return await Attendances.update({
+            studentId: updateParams.studentId,
+            clockedOutAt: new Date(updateParams.clockedOutAt),
+            clockedInAt: new Date(updateParams.clockedInAt)
+        }, {
+            where: {
+                id: attendanceId
+            }
+        });
+    }
+
     return {
         createNewAttendance,
         checkStudentIsPresent,
         updateClockedOut,
         getClockOutMissingRecords,
         updateAttendanceTimingsById,
-        getAttendanceOverview
+        getAttendanceOverview,
+        getAttendanceById,
+        updateAttendance,
+        deleteAttendanceById,
     }
 }
