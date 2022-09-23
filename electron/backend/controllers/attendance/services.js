@@ -70,7 +70,6 @@ module.exports = (app) => {
         const total = await Attendances.count({ where: { studentId } });
         const startOfMonth = new Date(year, month, 1, 0, 0, 0, 0);
         const endOfMonth = new Date(startOfMonth.getFullYear(), startOfMonth.getMonth() + 1, 0, 23, 59, 59);
-        console.log({ studentId, startOfMonth, endOfMonth });
         const thisMonth = await Attendances.findAll({
             where: {
                 [Op.and]: [

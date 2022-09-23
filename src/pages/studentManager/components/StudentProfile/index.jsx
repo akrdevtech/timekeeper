@@ -8,7 +8,6 @@ import StudentAttendanceDetails from './components/StudentAttendanceDetails'
 
 
 const getActiveTab = (detailsTab) => {
-    console.log(detailsTab);
     switch (detailsTab) {
         case 'attendance': return <StudentAttendanceDetails />;
         case 'performance': return <>Performance</>

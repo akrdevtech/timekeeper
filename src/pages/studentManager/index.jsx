@@ -26,7 +26,6 @@ const StudentManager = () => {
     } = state;
 
     const changeStudentDetailsActiveTab = (activeTabName) => {
-        console.log(`Payload ${activeTabName}`)
         dispatch({ type: StudentActions.STUDENT_DETAILS.CHANGE_TABS, payload: { activeTabName } });
     }
 

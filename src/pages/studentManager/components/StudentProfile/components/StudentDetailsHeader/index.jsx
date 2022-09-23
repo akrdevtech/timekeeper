@@ -40,7 +40,6 @@ const StudentProfileHeader = (props) => {
         if (selectedStudentInfo.isPresent) {
             studentApis.studentClockOut(selectedStudentInfo.id).then(studentData => {
                 const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
-                console.log({ updatedStudent });
                 dispatch({
                     type: StudentActions.STUDENT_DETAILS.CLOCK_OUT,
                     payload: {
@@ -51,8 +50,6 @@ const StudentProfileHeader = (props) => {
         } else {
             studentApis.studentClockIn(selectedStudentInfo.id).then(studentData => {
                 const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
-                console.log({ updatedStudent });
-
                 dispatch({
                     type: StudentActions.STUDENT_DETAILS.CLOCK_IN,
                     payload: {
@@ -117,7 +114,6 @@ const StudentProfileHeader = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        {console.log(selectedStudentInfo)}
                         <MenuItem onClick={() => selectAdditionalMenu("delete")} sx={{ paddingRight: 10 }}>
                             <IconButton aria-label="addtime">
                                 <EditIcon />

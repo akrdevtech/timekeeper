@@ -187,7 +187,6 @@ const getMonthAttendanceOverview = (studentId, year, month) => {
 
             if (success !== undefined) {
                 const attendance = data.data;
-                console.log({ attendance });
                 return attendance;
             }
             console.log('No response data');
