@@ -133,7 +133,13 @@ const StudentProfileHeader = (props) => {
                             sx={{ backgroundColor: "rgba(0,0,0,0)" }}
                             overlap="circular">
                             <Avatar
-                                sx={{ width: 80, height: 80, backgroundColor: theme.palette.secondary.light }}
+                                sx={{
+                                    width: 80,
+                                    height: 80,
+                                    backgroundColor: theme.palette.secondary.light,
+                                    borderStyle: 'solid',
+                                    borderWidth: 2,
+                                }}
                                 src={profilePic}
                                 color="secondary">
                                 <Typography variant='h4'><b>{name[0]}</b></Typography>

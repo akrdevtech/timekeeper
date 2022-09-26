@@ -12,8 +12,8 @@ const CalendarDateButtons = (props) => {
         selectedYear,
     }, } = state;
     const isSelectedDate = new Date(selectedDate).getFullYear() === selectedYear && dateHelpers.dateWithoutTimeIsEqual(selectedDate, date)
-    const clickFunction = isNaN(label)? ()=>{} : handleClick;
-    const doubleClickFunction = isNaN(label)? ()=>{} : handleDoubleClick;
+    const clickFunction = isNaN(label) ? () => { } : handleClick;
+    const doubleClickFunction = isNaN(label) ? () => { } : handleDoubleClick;
     return (
         <IconButton color="secondary" sx={{
             width: size || 60,
@@ -31,6 +31,7 @@ const CalendarDateButtons = (props) => {
         }}
             onClick={() => clickFunction(date, data, Number(label))}
             onDoubleClick={(e) => doubleClickFunction(e, date, data)}
+            onContextMenu={(e) => { e.preventDefault(); doubleClickFunction(e, date, data) }}
         >
             <Typography variant='caption' sx={{ fontSize: size ? (size / 4) : 12 }}>{label}</Typography>
         </IconButton>

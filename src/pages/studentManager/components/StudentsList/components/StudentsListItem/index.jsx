@@ -4,8 +4,8 @@ import FaceIcon from '@mui/icons-material/Face';
 
 const StudentsListItem = (props) => {
   const theme = useTheme();
-  const { studentInfo, selectedStudentId,handleSelectStudentId } = props;
-  const  isSelected  = studentInfo.id === selectedStudentId;
+  const { studentInfo, selectedStudentId, handleSelectStudentId } = props;
+  const isSelected = studentInfo.id === selectedStudentId;
   const cardStyle = {
     minWidth: 275,
     boxShadow: "none",
@@ -14,13 +14,13 @@ const StudentsListItem = (props) => {
     color: isSelected ? theme.palette.common.white : "textSecondary"
   }
   return (
-    <Card sx={cardStyle} onClick={()=>handleSelectStudentId(studentInfo.id)}>
+    <Card sx={cardStyle} onClick={() => handleSelectStudentId(studentInfo.id)}>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item xs={12} lg={6}>
           <CardHeader
             avatar={
               <Badge overlap="circular" variant="dot" color={studentInfo.isPresent ? "success" : "error"}>
-                <Avatar aria-label="recipe">
+                <Avatar aria-label="recipe" sx={{ borderStyle: 'solid', borderWidth: 2 }}>
                   {studentInfo.name ? <b>{studentInfo.name[0]}</b> : <FaceIcon />}
                 </Avatar>
               </Badge>

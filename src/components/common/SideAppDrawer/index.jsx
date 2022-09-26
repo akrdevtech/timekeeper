@@ -18,6 +18,7 @@ import CalendarMonthOutlined from '@mui/icons-material/CalendarMonthOutlined';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -81,13 +82,13 @@ export default function SideAppDrawer(props) {
     };
 
     const menuList = [
-        { icon: <DashboardOutlinedIcon />, text: "Dashboard", blockId: 1 },
-        { icon: <PeopleAltOutlinedIcon />, text: "Student Manager", blockId: 1 },
-        { icon: <TaskOutlinedIcon />, text: "Grades Manager", blockId: 1 },
-        { icon: <CalendarMonthOutlined />, text: "Attendance Manager", blockId: 1 },
-        { icon: <TimerOutlinedIcon />, text: "Task Manager", blockId: 1 },
-        { icon: <NotificationsNoneOutlinedIcon />, text: "Notifications Manager", blockId: 2 },
-        { icon: <SettingsOutlinedIcon />, text: "Settings Manager", blockId: 2 },
+        { icon: <DashboardOutlinedIcon />, link:'/', text: "Dashboard", blockId: 1 },
+        { icon: <PeopleAltOutlinedIcon />, link:'/students',text: "Student Manager", blockId: 1 },
+        { icon: <TaskOutlinedIcon />, link:'/grades',text: "Grades Manager", blockId: 1 },
+        { icon: <CalendarMonthOutlined />, link:'/attendances',text: "Attendance Manager", blockId: 1 },
+        { icon: <TimerOutlinedIcon />, link:'/tasks',text: "Task Manager", blockId: 1 },
+        { icon: <NotificationsNoneOutlinedIcon />, link:'/notifications',text: "Notifications Manager", blockId: 2 },
+        { icon: <SettingsOutlinedIcon />, link:'/settings',text: "Settings Manager", blockId: 2 },
     ];
 
     return (
@@ -101,28 +102,30 @@ export default function SideAppDrawer(props) {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {menuList.map(({ icon, text, blockId }, index) => (
+                    {menuList.map(({ icon, text, blockId,link }, index) => (
                         <React.Fragment key={text}>
                             {blockId === 1 && (
-                                <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                                    <ListItemButton
-                                        sx={{
-                                            minHeight: 48,
-                                            justifyContent: open ? 'initial' : 'center',
-                                            px: 2.5,
-                                        }}
-                                    >
-                                        <ListItemIcon
+                                <Link to={link}>
+                                    <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                                        <ListItemButton
                                             sx={{
-                                                minWidth: 0,
-                                                mr: open ? 3 : 'auto',
-                                                justifyContent: 'center',
+                                                minHeight: 48,
+                                                justifyContent: open ? 'initial' : 'center',
+                                                px: 2.5,
                                             }}
                                         >
-                                            {icon}
-                                        </ListItemIcon>
-                                    </ListItemButton>
-                                </ListItem>
+                                            <ListItemIcon
+                                                sx={{
+                                                    minWidth: 0,
+                                                    mr: open ? 3 : 'auto',
+                                                    justifyContent: 'center',
+                                                }}
+                                            >
+                                                {icon}
+                                            </ListItemIcon>
+                                        </ListItemButton>
+                                    </ListItem>
+                                </Link>
                             )}
                         </React.Fragment>
                     ))}

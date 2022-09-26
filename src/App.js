@@ -3,6 +3,7 @@ import React from 'react'
 import SideAppDrawer from './components/common/SideAppDrawer';
 import StudentManager from "./pages/studentManager";
 import StudentStore from './pages/studentManager/Store';
+import { Routes, Route } from 'react-router-dom';
 
 //https://codereview.stackexchange.com/questions/256457/alarm-clock-with-react-js
 const theme = createTheme({
@@ -41,11 +42,15 @@ function App() {
       <div className="App" style={{ backgroundColor: theme.palette.lightTheme.backgroundColor }}>
         <SideAppDrawer >
           <StudentStore>
-            <StudentManager />
+            <Routes>
+              <Route path="/" element={<>Dashboard</>} />
+              <Route path="/students" element={<StudentManager />} />
+              <Route path="/courses" element={<>course manger</>} />
+            </Routes>
           </StudentStore>
         </SideAppDrawer >
       </div>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
 
