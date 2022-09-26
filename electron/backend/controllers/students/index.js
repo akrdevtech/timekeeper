@@ -31,6 +31,14 @@ module.exports = (app) => {
         validatorMiddleware(studentValidators.deactivateStudent),
         student.deactivateStudent,
     ]);
+    router.patch('/:studentId/graduate', [
+        validatorMiddleware(studentValidators.studentGraduateCourse),
+        student.studentGraduateCourse,
+    ]);
+    router.patch('/:studentId/pursue', [
+        validatorMiddleware(studentValidators.studentPursueCourse),
+        student.studentPursueCourse,
+    ]);
     router.get('/:studentId/attendance', [
         validatorMiddleware(studentValidators.attendanceOverview),
         student.getAttendanceOverview,

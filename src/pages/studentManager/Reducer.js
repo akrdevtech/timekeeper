@@ -185,6 +185,30 @@ const StudentReducer = (state, action) => {
                     refreshAttendanceCalendar: true,
                 },
             }
+        case StudentActions.STUDENT_DETAILS.ACCOUNT.ACTIVATE:
+            return {
+                ...state,
+                refreshStudentList: true,
+                selectedStudentInfo: action.payload.studentData,
+            }
+        case StudentActions.STUDENT_DETAILS.ACCOUNT.DEACTIVATE:
+            return {
+                ...state,
+                refreshStudentList: true,
+                selectedStudentInfo: action.payload.studentData,
+            }
+        case StudentActions.STUDENT_DETAILS.ACCOUNT.PURSUE:
+            return {
+                ...state,
+                refreshStudentList: true,
+                selectedStudentInfo: action.payload.studentData,
+            }
+        case StudentActions.STUDENT_DETAILS.ACCOUNT.GRADUATE:
+            return {
+                ...state,
+                refreshStudentList: true,
+                selectedStudentInfo: action.payload.studentData,
+            }
         default:
             return state;
     }

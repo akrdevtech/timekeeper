@@ -12,6 +12,7 @@ const AttendanceOverallDetails = () => {
         clockedOut,
         totalAttendance,
         thisMonthAttendance,
+        selectedMonth
     }, } = state;
 
     return (
@@ -28,15 +29,17 @@ const AttendanceOverallDetails = () => {
                     <table style={{ width: "100%", textAlign: 'left', color: theme.palette.text.secondary }}>
                         <tbody>
                             <tr><td><b>Day</b></td><td> : </td><td>{selectedDate ? dateHelpers.formatAsPartDate(selectedDate) : 'MM dd,YYYY'}</td></tr>
-                            <tr><td><b>In</b></td><td> : </td><td>{clockedIn?dateHelpers.formatLocaleTimeString(clockedIn):null}</td></tr>
-                            <tr><td><b>Out</b></td><td> : </td><td>{clockedOut?dateHelpers.formatLocaleTimeString(clockedOut):null}</td></tr>
+                            <tr><td><b>In</b></td><td> : </td><td>{clockedIn ? dateHelpers.formatLocaleTimeString(clockedIn) : null}</td></tr>
+                            <tr><td><b>Out</b></td><td> : </td><td>{clockedOut ? dateHelpers.formatLocaleTimeString(clockedOut) : null}</td></tr>
                         </tbody>
                     </table>
                 </Paper>
             </Grid>
             <Grid item xs={12}>
                 <Paper elevation={0} sx={{ backgroundColor: "#F5F8FB", borderRadius: 2, padding: 2, textAlign: 'center' }} >
-                    <Typography variant='body1' color="textSecondary"><b>This Month : </b>{thisMonthAttendance}</Typography>
+                    <Typography variant='body1' color="textSecondary">
+                        {dateHelpers.getMonthName(selectedMonth).full} Attendance: <b>{thisMonthAttendance}</b>
+                    </Typography>
                 </Paper>
             </Grid>
         </Grid>

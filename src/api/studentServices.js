@@ -10,6 +10,7 @@ const studentsDTO = (data, mode) => {
             occupation: data.occupation,
             isPresent: data.isPresent,
             isActive: data.isActive,
+            hasGraduated: data.hasGraduated,
             contactInfo: {
                 email: data.email,
                 phone: data.phone,
@@ -197,11 +198,99 @@ const getMonthAttendanceOverview = (studentId, year, month) => {
     })
 }
 
+const deactivateStudent = (studentId) => {
+    return api.patch(`/students/${studentId}/deactivate`).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const studentInfo = data.data;
+                const studentData = studentsDTO(studentInfo, 'from');
+                return studentData;
+            }
+            console.log('No response data');
+            return { };
+        }
+        console.log('Error occured while communicating with api');
+        return null;
+    })
+}
+
+const activateStudent = (studentId) => {
+    return api.patch(`/students/${studentId}/activate`).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const studentInfo = data.data;
+                const studentData = studentsDTO(studentInfo, 'from');
+                return studentData;
+            }
+            console.log('No response data');
+            return { };
+        }
+        console.log('Error occured while communicating with api');
+        return null;
+    })
+}
+
+const studentPursueCourse = (studentId) => {
+    return api.patch(`/students/${studentId}/pursue`).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const studentInfo = data.data;
+                const studentData = studentsDTO(studentInfo, 'from');
+                return studentData;
+            }
+            console.log('No response data');
+            return { };
+        }
+        console.log('Error occured while communicating with api');
+        return null;
+    })
+}
+
+const studentGraduateCourse = (studentId) => {
+    return api.patch(`/students/${studentId}/graduate`).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const studentInfo = data.data;
+                const studentData = studentsDTO(studentInfo, 'from');
+                return studentData;
+            }
+            console.log('No response data');
+            return { };
+        }
+        console.log('Error occured while communicating with api');
+        return null;
+    })
+}
+
 const studentApis = {
     getStudentsList,
     createNewStudent,
     studentClockIn,
     studentClockOut,
     getMonthAttendanceOverview,
+    deactivateStudent,
+    activateStudent,
+    studentPursueCourse,
+    studentGraduateCourse,
 }
 export default studentApis;

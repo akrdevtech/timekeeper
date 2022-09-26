@@ -148,7 +148,8 @@ module.exports = (app) => {
                 return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
             }
             await students.activateStudent(studentId);
-            res.locals.data = student.id;
+            const studentData = await students.getStudentsById(studentId);
+            res.locals.data = studentData;
             next();
         } catch (error) {
             next(error)
@@ -164,7 +165,8 @@ module.exports = (app) => {
                 return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
             }
             await students.deactivateStudent(studentId);
-            res.locals.data = student.id;
+            const studentData = await students.getStudentsById(studentId);
+            res.locals.data = studentData;
             next();
         } catch (error) {
             next(error)
@@ -186,6 +188,41 @@ module.exports = (app) => {
             next(error)
         }
     }
+
+    const studentPursueCourse = async (req, res, next) => {
+        try {
+            const { studentId } = req.params;
+
+            const student = await students.getStudentsById(studentId);
+            if (!student) {
+                return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
+            }
+            await students.studentPursueCourse(studentId);
+            const studentData = await students.getStudentsById(studentId);
+            res.locals.data = studentData;
+            next();
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    const studentGraduateCourse = async (req, res, next) => {
+        try {
+            const { studentId } = req.params;
+
+            const student = await students.getStudentsById(studentId);
+            if (!student) {
+                return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
+            }
+            await students.studentGraduateCourse(studentId);
+            const studentData = await students.getStudentsById(studentId);
+            res.locals.data = studentData;
+            next();
+        } catch (error) {
+            next(error)
+        }
+    }
+    
     return {
         createNewStudent,
         studentClockIn,
@@ -193,7 +230,9 @@ module.exports = (app) => {
         getAllStudentsByFilter,
         activateStudent,
         deactivateStudent,
-        getAttendanceOverview
+        getAttendanceOverview,
+        studentGraduateCourse,
+        studentPursueCourse,
     }
 }
 

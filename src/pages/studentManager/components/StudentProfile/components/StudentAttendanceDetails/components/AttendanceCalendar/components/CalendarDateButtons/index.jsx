@@ -27,12 +27,12 @@ const CalendarDateButtons = (props) => {
             },
             borderStyle: 'solid',
             borderWidth: isSelectedDate ? 2 : 0,
-            borderColor: isSelectedDate ? theme.palette.primary.main : "transparent",
+            borderColor: isSelectedDate ? theme.palette.warning.main : "transparent",
         }}
             onClick={() => clickFunction(date, data, Number(label))}
             onDoubleClick={(e) => doubleClickFunction(e, date, data)}
         >
-            <Typography variant='caption' sx={{ fontSize: size ? (size / 5) : 12 }}>{label}</Typography>
+            <Typography variant='caption' sx={{ fontSize: size ? (size / 4) : 12 }}>{label}</Typography>
         </IconButton>
     )
 }

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Grid, Avatar, Typography, IconButton, useTheme, Menu, MenuItem, Tooltip } from '@mui/material'
+import { Grid, Avatar, Typography, IconButton, useTheme, Menu, MenuItem, Tooltip, Badge } from '@mui/material'
 import AlarmAddIcon from '@mui/icons-material/AlarmAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -12,6 +12,8 @@ import studentApis from '../../../../../../api/studentServices';
 import StudentActions from '../../../../Actions';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import SchoolIcon from '@mui/icons-material/School';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 
 const StudentProfileHeader = (props) => {
     const theme = useTheme();
@@ -33,7 +35,7 @@ const StudentProfileHeader = (props) => {
     };
     const selectAdditionalMenu = (mode) => {
         setAnchorEl(null);
-        console.log(mode);
+        executeAdditionalMenu(mode);
     }
 
     const handleClockInOut = () => {
@@ -60,14 +62,83 @@ const StudentProfileHeader = (props) => {
         }
     }
 
+    const executeAdditionalMenu = (mode) => {
+        switch (mode) {
+            case "deactive":
+                return studentApis.deactivateStudent(selectedStudentInfo.id).then(studentData => {
+                    const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
+                    dispatch({
+                        type: StudentActions.STUDENT_DETAILS.ACCOUNT.DEACTIVATE,
+                        payload: {
+                            studentData: updatedStudent,
+                        }
+                    });
+                })
+
+            case "active":
+                return studentApis.activateStudent(selectedStudentInfo.id).then(studentData => {
+                    const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
+                    dispatch({
+                        type: StudentActions.STUDENT_DETAILS.ACCOUNT.ACTIVATE,
+                        payload: {
+                            studentData: updatedStudent,
+                        }
+                    });
+                })
+
+            case "pursue":
+                return studentApis.studentPursueCourse(selectedStudentInfo.id).then(studentData => {
+                    const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
+                    dispatch({
+                        type: StudentActions.STUDENT_DETAILS.ACCOUNT.PURSUE,
+                        payload: {
+                            studentData: updatedStudent,
+                        }
+                    });
+                })
+
+            case "graduate":
+                return studentApis.studentGraduateCourse(selectedStudentInfo.id).then(studentData => {
+                    const updatedStudent = studentData && studentData.id ? studentData : selectedStudentInfo;
+                    dispatch({
+                        type: StudentActions.STUDENT_DETAILS.ACCOUNT.GRADUATE,
+                        payload: {
+                            studentData: updatedStudent,
+                        }
+                    });
+                })
+
+
+            default: console.log(mode); break;
+        }
+    }
+
     return (
         <Grid container direction="row">
             <Grid item xs={12} lg={9}>
                 <Grid container direction="row" justifyContent="center" alignItems="center">
                     <Grid item xs={12} lg={2.5}>
-                        <Avatar sx={{ width: 80, height: 80, backgroundColor: theme.palette.secondary.light }} src={profilePic} color="secondary">
-                            <Typography variant='h4'><b>{name[0]}</b></Typography>
-                        </Avatar>
+                        <Badge
+                            badgeContent={
+                                selectedStudentInfo && selectedStudentInfo.hasGraduated ?
+                                    <Tooltip title="Graduated" placement="right">
+                                        <SchoolIcon color="primary" />
+                                    </Tooltip> :
+                                    selectedStudentInfo && !selectedStudentInfo.isActive ?
+                                        <Tooltip title="Is Disabled" placement="right">
+                                            <NoAccountsIcon color="error" />
+                                        </Tooltip> :
+                                        <></>
+                            }
+                            sx={{ backgroundColor: "rgba(0,0,0,0)" }}
+                            overlap="circular">
+                            <Avatar
+                                sx={{ width: 80, height: 80, backgroundColor: theme.palette.secondary.light }}
+                                src={profilePic}
+                                color="secondary">
+                                <Typography variant='h4'><b>{name[0]}</b></Typography>
+                            </Avatar>
+                        </Badge>
                     </Grid>
                     <Grid item xs={12} lg={9.5} >
                         <Typography variant="h6" component="p"><b>{name}</b></Typography>
@@ -114,7 +185,7 @@ const StudentProfileHeader = (props) => {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={() => selectAdditionalMenu("delete")} sx={{ paddingRight: 10 }}>
+                        <MenuItem onClick={() => selectAdditionalMenu("edit")} sx={{ paddingRight: 10 }}>
                             <IconButton aria-label="addtime">
                                 <EditIcon />
                             </IconButton>
@@ -129,7 +200,7 @@ const StudentProfileHeader = (props) => {
                                 Deactivate
                             </MenuItem>
                         ) : (
-                            <MenuItem onClick={() => selectAdditionalMenu("reactive")}>
+                            <MenuItem onClick={() => selectAdditionalMenu("active")}>
                                 <IconButton aria-label="addtime">
                                     <VerifiedUserIcon />
                                 </IconButton>
@@ -137,8 +208,23 @@ const StudentProfileHeader = (props) => {
                             </MenuItem>
                         )}
 
+                        {selectedStudentInfo.hasGraduated ? (
+                            <MenuItem onClick={() => selectAdditionalMenu("pursue")} >
+                                <IconButton aria-label="addtime">
+                                    <HandshakeIcon />
+                                </IconButton>
+                                Pursue
+                            </MenuItem>
+                        ) : (
+                            <MenuItem onClick={() => selectAdditionalMenu("graduate")}>
+                                <IconButton aria-label="addtime">
+                                    <SchoolIcon />
+                                </IconButton>
+                                Graduate
+                            </MenuItem>
+                        )}
 
-                        <MenuItem onClick={() => selectAdditionalMenu("edit")}>
+                        <MenuItem onClick={() => selectAdditionalMenu("remove")}>
                             <IconButton aria-label="addtime" color='error'>
                                 <DeleteIcon />
                             </IconButton>

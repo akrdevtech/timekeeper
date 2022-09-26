@@ -93,6 +93,14 @@ module.exports = (app) => {
         return await Students.update({ isActive: false, isPresent: false }, { where: { id: studentId } })
     }
 
+    const studentPursueCourse = async (studentId) => {
+        return await Students.update({ hasGraduated: false }, { where: { id: studentId } })
+    }
+
+    const studentGraduateCourse = async (studentId) => {
+        return await Students.update({ hasGraduated: true }, { where: { id: studentId } })
+    }
+
     return {
         createNewStudent,
         getStudentsById,
@@ -103,5 +111,7 @@ module.exports = (app) => {
         markStudentAbsent,
         activateStudent,
         deactivateStudent,
+        studentGraduateCourse,
+        studentPursueCourse,
     }
 }
