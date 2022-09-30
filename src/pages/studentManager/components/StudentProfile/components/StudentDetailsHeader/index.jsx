@@ -130,7 +130,6 @@ const StudentProfileHeader = (props) => {
                                         </Tooltip> :
                                         <></>
                             }
-                            sx={{ backgroundColor: "rgba(0,0,0,0)" }}
                             overlap="circular">
                             <Avatar
                                 sx={{
@@ -139,6 +138,7 @@ const StudentProfileHeader = (props) => {
                                     backgroundColor: theme.palette.secondary.light,
                                     borderStyle: 'solid',
                                     borderWidth: 2,
+                                    borderColor: theme.palette.common.white,
                                 }}
                                 src={profilePic}
                                 color="secondary">

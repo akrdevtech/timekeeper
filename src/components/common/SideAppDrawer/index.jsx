@@ -18,7 +18,11 @@ import CalendarMonthOutlined from '@mui/icons-material/CalendarMonthOutlined';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import { Link } from 'react-router-dom';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
+import { Link, useLocation } from 'react-router-dom';
+import { GlobalContext } from '../../../contexts/global/Store';
+import GlobalActions from '../../../contexts/global/Actions';
+import { useEffect } from 'react';
 
 const drawerWidth = 240;
 
@@ -72,23 +76,57 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function SideAppDrawer(props) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [state, dispatch] = React.useContext(GlobalContext);
 
-    // const handleDrawerOpen = () => {
-    //     setOpen(true);
-    // };
+    const location = useLocation();
+
+
+    const { selectedPage } = state;
+
+    const getActivePage = (pageId) => {
+        switch (pageId) {
+            case '': return 'Dashboard';
+            case 'students': return 'Student Manager';
+            case 'courses': return 'Course Manager';
+            case 'grades': return 'Grades Manager';
+            case 'attendances': return 'Attendance Manager';
+            case 'tasks': return 'Task Manager';
+            case 'notifications': return 'Notifications Manager';
+            case 'settings': return 'Settings Manager';
+            default: return 'Dashboard';
+        }
+    }
+
+    useEffect(() => {
+        const currentPage = location.pathname.split('/')[1];
+        const activePage = getActivePage(currentPage);
+        if (selectedPage !== activePage) {
+            handlePageSelect(activePage)
+        }
+    }, [])
 
     const handleDrawerClose = () => {
         setOpen(false);
     };
 
+    const handlePageSelect = (pageName) => {
+        dispatch({
+            type: GlobalActions.APP_DRAWER.SELECT_PAGE,
+            payload: {
+                selectedPage: pageName,
+            }
+        });
+    }
+
     const menuList = [
-        { icon: <DashboardOutlinedIcon />, link:'/', text: "Dashboard", blockId: 1 },
-        { icon: <PeopleAltOutlinedIcon />, link:'/students',text: "Student Manager", blockId: 1 },
-        { icon: <TaskOutlinedIcon />, link:'/grades',text: "Grades Manager", blockId: 1 },
-        { icon: <CalendarMonthOutlined />, link:'/attendances',text: "Attendance Manager", blockId: 1 },
-        { icon: <TimerOutlinedIcon />, link:'/tasks',text: "Task Manager", blockId: 1 },
-        { icon: <NotificationsNoneOutlinedIcon />, link:'/notifications',text: "Notifications Manager", blockId: 2 },
-        { icon: <SettingsOutlinedIcon />, link:'/settings',text: "Settings Manager", blockId: 2 },
+        { icon: <DashboardOutlinedIcon />, link: '/', text: "Dashboard", blockId: 1 },
+        { icon: <PeopleAltOutlinedIcon />, link: '/students', text: "Student Manager", blockId: 1 },
+        { icon: <SchoolOutlinedIcon />, link: '/courses', text: "Course Manager", blockId: 1 },
+        { icon: <TaskOutlinedIcon />, link: '/grades', text: "Grades Manager", blockId: 1 },
+        { icon: <CalendarMonthOutlined />, link: '/attendances', text: "Attendance Manager", blockId: 1 },
+        { icon: <TimerOutlinedIcon />, link: '/tasks', text: "Task Manager", blockId: 1 },
+        { icon: <NotificationsNoneOutlinedIcon />, link: '/notifications', text: "Notifications Manager", blockId: 2 },
+        { icon: <SettingsOutlinedIcon />, link: '/settings', text: "Settings Manager", blockId: 2 },
     ];
 
     return (
@@ -102,16 +140,26 @@ export default function SideAppDrawer(props) {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {menuList.map(({ icon, text, blockId,link }, index) => (
+                    {menuList.map(({ icon, text, blockId, link }, index) => (
                         <React.Fragment key={text}>
                             {blockId === 1 && (
-                                <Link to={link}>
+                                <Link to={link} onClick={() => handlePageSelect(text)}>
                                     <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                                         <ListItemButton
                                             sx={{
                                                 minHeight: 48,
                                                 justifyContent: open ? 'initial' : 'center',
                                                 px: 2.5,
+                                                backgroundColor: selectedPage === text ?
+                                                    theme.palette.primary.main :
+                                                    theme.palette.common.white,
+                                                margin: 1,
+                                                borderRadius: 2,
+                                                '&:hover': {
+                                                    backgroundColor: selectedPage === text ?
+                                                        theme.palette.primary.main :
+                                                        theme.palette.grey[300],
+                                                }
                                             }}
                                         >
                                             <ListItemIcon
@@ -119,6 +167,9 @@ export default function SideAppDrawer(props) {
                                                     minWidth: 0,
                                                     mr: open ? 3 : 'auto',
                                                     justifyContent: 'center',
+                                                    color: selectedPage === text ?
+                                                        theme.palette.common.white :
+                                                        theme.palette.text.secondary,
                                                 }}
                                             >
                                                 {icon}
