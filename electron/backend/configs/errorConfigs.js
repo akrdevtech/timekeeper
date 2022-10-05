@@ -23,6 +23,9 @@ module.exports = {
       STUDENT_IS_ABSENT:'STUDENT_IS_ABSENT',
       FAILED_CLOCK_IN: 'FAILED_CLOCK_IN',
     },
+    course:{
+      COURSE_EXIST: 'COURSE_EXIST',
+    },
     organizations: {
       ORGANIZATION_DOES_NOT_EXIST: 'ORGANIZATION_DOES_NOT_EXIST',
       ORGANIZATION_CREATION_FAILED: 'ORGANIZATION_CREATION_FAILED',
@@ -54,6 +57,7 @@ module.exports = {
     ORGANIZATION_CREATION_FAILED: "Failed to create organization",
     ADDRESS_DOES_NOT_EXIST: "Address doesnot exist",
     ADDRESS_CREATION_FAILED: "Failed to create address",
-    FAILED_CLOCK_IN: 'Student failed to clock in'
+    FAILED_CLOCK_IN: 'Student failed to clock in',
+    COURSE_EXIST: 'Course already exists',
   },
 };

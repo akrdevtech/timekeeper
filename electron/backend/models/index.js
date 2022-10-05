@@ -2,6 +2,7 @@ const dbConfig = require('../configs/dbConfig');
 const { Sequelize, DataTypes, Model, Op } = require('sequelize');
 const studentsModel = require('./students');
 const attendancesModel = require('./attendances');
+const coursesModel = require('./courses');
 const loggerUtil = require('../utils/logger');
 
 const logger = loggerUtil("DB Initializer")
@@ -20,6 +21,7 @@ sequelize.authenticate()
 
 const Students = studentsModel(sequelize, DataTypes, Model);
 const Attendances = attendancesModel(sequelize, DataTypes, Model);
+const Courses = coursesModel(sequelize, DataTypes, Model);
 
 const db = {
     Op,
@@ -29,6 +31,7 @@ const db = {
     collections: {
         Students,
         Attendances,
+        Courses
     }
 }
 
