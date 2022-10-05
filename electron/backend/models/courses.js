@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         totalCredits: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
         minCredits: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
         syllabus: { type: DataTypes.STRING, allowNull: true },
+        status: { type: DataTypes.STRING, allowNull: false },
         studentsAttending: { type: DataTypes.NUMBER, allowNull: false, defaultValue: 0 },
         studentsGraduated: { type: DataTypes.NUMBER, allowNull: false, defaultValue: 0 },
     }, {

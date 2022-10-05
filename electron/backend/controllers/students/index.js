@@ -8,6 +8,7 @@ module.exports = (app) => {
     const student = studentControllers(app);
 
     router.get('/', [
+        validatorMiddleware(studentValidators.getAllStudentsByFilter),
         student.getAllStudentsByFilter,
     ]);
 

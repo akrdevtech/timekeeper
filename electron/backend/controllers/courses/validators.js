@@ -12,6 +12,16 @@ const createNewCourse = {
     }),
 }
 
+const getAllCoursesByFilter = {
+    query: Joi.object({
+        page: Joi.number().required(),
+        limit: Joi.number(),
+        search: Joi.string(),
+        status: Joi.string(),
+    })
+}
+
 module.exports = {
     createNewCourse,
+    getAllCoursesByFilter,
 };

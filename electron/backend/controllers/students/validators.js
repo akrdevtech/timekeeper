@@ -90,6 +90,18 @@ const attendanceOverview = {
     })
 }
 
+const getAllStudentsByFilter = {
+    query: Joi.object({
+        page: Joi.number().required(),
+        limit: Joi.number(),
+        search: Joi.string(),
+        course: Joi.string(),
+        admission: Joi.string(),
+        graduation: Joi.string(),
+        presence: Joi.string(),
+    })
+}
+
 module.exports = {
     createNewStudent,
     studentClockIn,
@@ -99,4 +111,5 @@ module.exports = {
     attendanceOverview,
     studentGraduateCourse,
     studentPursueCourse,
+    getAllStudentsByFilter,
 };

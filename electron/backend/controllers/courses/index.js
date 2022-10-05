@@ -7,6 +7,11 @@ const router = express.Router();
 module.exports = (app) => {
     const course = courseControllers(app);
 
+    router.get('/', [
+        validatorMiddleware(courseValidators.getAllCoursesByFilter),
+        course.getAllCoursesByFilter,
+    ]);
+
     router.post('/', [
         validatorMiddleware(courseValidators.createNewCourse),
         course.createNewCourse,

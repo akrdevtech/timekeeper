@@ -45,8 +45,39 @@ module.exports = (app) => {
 
     }
 
+    const getAllCoursesByFilter = async (filters) => {
+        const { page, limit, search, status } = filters;
+        const offset = page * limit;
+        const query = { [Op.and]: [] }
+        if (search) {
+            query[Op.and].push({
+                [Op.or]: [
+                    {
+                        courseId: {
+                            [Op.like]: `%${search}%`
+                        }
+                    },
+                    {
+                        courseName: {
+                            [Op.like]: `%${search}%`
+                        }
+                    }
+                ]
+            })
+        }
+        if (status != null) {
+            query[Op.and].push({ status: { [Op.in]: [status] } });
+        }
+        const { count, rows } = await Courses.findAndCountAll({
+            where: query,
+            offset,
+            limit,
+        });
+        return { count, rows };
+    }
 
     return {
         createNewCourse,
+        getAllCoursesByFilter,
     }
 }

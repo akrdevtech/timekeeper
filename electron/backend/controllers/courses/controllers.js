@@ -1,7 +1,15 @@
+const CourseEnums = require('./enums');
 const courseServices = require('./services');
 
 module.exports = (app) => {
     const course = courseServices(app);
+
+    const getAllCoursesByFilter = async (req, res, next) => {
+        const { page, limit, search, status } = req.query;
+        const courseList = await course.getAllCoursesByFilter({ page, limit, search, status });
+        res.locals.data = courseList;
+        next();
+    }
 
     const createNewCourse = async (req, res, next) => {
         console.log("creating course");
@@ -13,9 +21,10 @@ module.exports = (app) => {
                 courseId,
                 courseName,
                 duration,
-                fee: fee ? parseFloat(fee).toFixed(2) : 0.0,
+                fee,
                 totalCredits,
                 minCredits,
+                status: CourseEnums.CourseStatus.ACTIVE,
                 syllabus: syllabus || null,
                 studentsAttending: 0,
                 studentsGraduated: 0
@@ -31,6 +40,7 @@ module.exports = (app) => {
 
     return {
         createNewCourse,
+        getAllCoursesByFilter,
     }
 }
 
