@@ -39,7 +39,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-electron": "export ELECTRON_START_URL=http://localhost:3000 && electron .",
+    "start:electron": "electron .",
     "make:src": "mkdir build\\src",
     "build:lin": "npm run make:src && cp -r electron/ build/electron && cp -r src/shared/ build/src/shared",
     "build:win": "npm run make:src && robocopy electron build/electron /S & robocopy src/shared build/src/shared /S",

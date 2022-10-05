@@ -10,14 +10,38 @@ export default function StudentDetailsTabs(props) {
     const activeTabTheme = { borderBottomStyle: 'solid', borderBottomColor: theme.palette.primary.main, borderBottomWidth: 2 }
     return (
         <Grid container direction="row">
-            <Grid item xs={12} lg={4} sx={studentDetailsActiveTab==="profile"?activeTabTheme:{}}>
-                <Button size="small" variant="text" fullWidth onClick={() => { changeStudentDetailsActiveTab("profile") }}><PermIdentityOutlinedIcon /></Button>
+            <Grid item xs={12} lg={4} sx={studentDetailsActiveTab === "profile" ? activeTabTheme : {}}>
+                <Button
+                    size="small"
+                    variant="text"
+                    fullWidth
+                    onClick={() => { changeStudentDetailsActiveTab("profile") }}
+                    sx={{ color: studentDetailsActiveTab === "profile" ? "primary" : theme.palette.text.secondary }}
+                >
+                    <PermIdentityOutlinedIcon />
+                </Button>
             </Grid>
-            <Grid item xs={12} lg={4} sx={studentDetailsActiveTab==="attendance"?activeTabTheme:{}}>
-                <Button size="small" variant="text" fullWidth onClick={() => { changeStudentDetailsActiveTab("attendance") }}><CalendarMonthOutlinedIcon /></Button>
+            <Grid item xs={12} lg={4} sx={studentDetailsActiveTab === "attendance" ? activeTabTheme : {}}>
+                <Button
+                    size="small"
+                    variant="text"
+                    fullWidth
+                    onClick={() => { changeStudentDetailsActiveTab("attendance") }}
+                    sx={{ color: studentDetailsActiveTab === "attendance" ? "primary" : theme.palette.text.secondary }}
+                >
+                    <CalendarMonthOutlinedIcon />
+                </Button>
             </Grid>
-            <Grid item xs={12} lg={4} sx={studentDetailsActiveTab==="performance"?activeTabTheme:{}}>
-                <Button size="small" variant="text" fullWidth onClick={() => { changeStudentDetailsActiveTab("performance") }}><BarChartOutlinedIcon /></Button>
+            <Grid item xs={12} lg={4} sx={studentDetailsActiveTab === "performance" ? activeTabTheme : {}}>
+                <Button
+                    size="small"
+                    variant="text"
+                    fullWidth
+                    onClick={() => { changeStudentDetailsActiveTab("performance") }}
+                    sx={{ color: studentDetailsActiveTab === "performance" ? "primary" : theme.palette.text.secondary }}
+                >
+                    <BarChartOutlinedIcon />
+                </Button>
             </Grid>
         </Grid>
     );
