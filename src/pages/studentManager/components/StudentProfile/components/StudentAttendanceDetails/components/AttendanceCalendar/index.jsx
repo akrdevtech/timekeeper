@@ -80,13 +80,32 @@ const AttendanceCalendar = (props) => {
             selectedDate,
             clockedIn,
             clockedOut,
-            totalAttendance,
-            thisMonthAttendance,
-        }
+            refreshAttendanceCalendar,
+        },
+        studentDetailsActiveTab
     } = state;
+
+    const isAttendanceTab = studentDetailsActiveTab === 'attendance';
+    useEffect(() => {
+        if (isAttendanceTab) {
+            studentApis.getMonthAttendanceOverview(selectedStudentInfo.id, selectedYear, selectedMonth).then(({ total, thisMonth }) => {
+                dispatch({
+                    type: StudentActions.STUDENT_DETAILS.ATTENDANCE_CALENDAR.SET_ATTENDANCE,
+                    payload: {
+                        selectedMonthAttendance: thisMonth,
+                        totalAttendance: total,
+                        selectedDate: null,
+                        clockedIn: null,
+                        clockedOut: null,
+                        thisMonthAttendance: thisMonth.length,
+                    }
+                });
+            })
+        }
+    }, [isAttendanceTab, selectedStudentInfo.id, selectedYear, selectedMonth, refreshAttendanceCalendar===true])
     const { size } = props;
 
-    const [monthData, setThisMonthData] = useState(getWeeksLayout(selectedYear, selectedMonth, selectedMonthAttendance));
+    const [monthData, setThisMonthData] = useState([]);
 
     const handleYearChange = (newYear) => {
         dispatch({
@@ -157,9 +176,8 @@ const AttendanceCalendar = (props) => {
     const yearSelectorOpen = Boolean(yearMenuAnchor);
 
     useEffect(() => {
-        console.log("Use effect triggered")
         setThisMonthData(getWeeksLayout(selectedYear, selectedMonth, selectedMonthAttendance))
-    }, [selectedYear, selectedMonth, selectedMonthAttendance])
+    }, [selectedYear, selectedMonth, JSON.stringify(selectedMonthAttendance)])
 
     const [editTimingsAnchorEl, setEditTimingsAnchorEl] = React.useState(null);
 
