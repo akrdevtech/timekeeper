@@ -17,7 +17,7 @@ const getAllCoursesByFilter = {
         page: Joi.number().required(),
         limit: Joi.number(),
         search: Joi.string(),
-        status: Joi.string(),
+        status: Joi.alternatives().try(Joi.array().items(Joi.string()), Joi.string()),
     })
 }
 

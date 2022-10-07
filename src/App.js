@@ -2,7 +2,9 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import React from 'react'
 import SideAppDrawer from './components/common/SideAppDrawer';
 import StudentManager from "./pages/studentManager";
+import CourseManager from "./pages/courseManager";
 import StudentStore from './pages/studentManager/Store';
+import CourseStore from './pages/courseManager/Store';
 import { Routes, Route } from 'react-router-dom';
 import GlobalStore from './contexts/global/Store';
 
@@ -45,11 +47,13 @@ function App() {
         <div className="App" style={{ backgroundColor: theme.palette.lightTheme.backgroundColor }}>
           <SideAppDrawer >
             <StudentStore>
-              <Routes>
-                <Route path="/" element={<>Dashboard</>} />
-                <Route path="/students" element={<StudentManager />} />
-                <Route path="/courses" element={<>course manger</>} />
-              </Routes>
+              <CourseStore>
+                <Routes>
+                  <Route path="/" element={<>Dashboard</>} />
+                  <Route path="/students" element={<StudentManager />} />
+                  <Route path="/courses" element={<CourseManager />} />
+                </Routes>
+              </CourseStore>
             </StudentStore>
           </SideAppDrawer >
         </div>

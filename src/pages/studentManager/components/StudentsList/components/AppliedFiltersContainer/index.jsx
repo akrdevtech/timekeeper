@@ -23,7 +23,7 @@ const AppliedFiltersContainer = props => {
             default: value = 'any'; break;
         }
         dispatch({
-            type: StudentActions.STUNDENT_LIST_FILTER_TRAY.APPLY_FILTERS,
+            type: StudentActions.STUDENT_LIST_FILTER_TRAY.APPLY_FILTERS,
             payload: { appliedStudentListFilters: { ...appliedStudentListFilters, [field]: value } }
         })
     }

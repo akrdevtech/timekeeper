@@ -95,19 +95,20 @@ const StudentReducer = (state, action) => {
                     thisMonthAttendance: 0,
                 }
             };
-        case StudentActions.STUNDENT_LIST_FILTER_TRAY.TOGGLE:
+        case StudentActions.STUDENT_LIST_FILTER_TRAY.TOGGLE:
             return {
                 ...state,
                 filterTrayToggle: !state.filterTrayToggle,
             }
-        case StudentActions.STUNDENT_LIST_FILTER_TRAY.APPLY_FILTERS:
+        case StudentActions.STUDENT_LIST_FILTER_TRAY.APPLY_FILTERS:
             return {
                 ...state,
                 filterTrayToggle: false,
+                refreshStudentList: true,
                 appliedStudentListFilters: {
                     ...state.appliedStudentListFilters,
                     ...action.payload.appliedStudentListFilters,
-                }
+                },
             }
         case StudentActions.STUDENT_DETAILS.CHANGE_TABS:
             return {

@@ -98,7 +98,7 @@ const StudentManager = () => {
     const handleSearch = () => {
         const newAppliedFilters = { ...appliedStudentListFilters, search: searchText };
         dispatch({
-            type: StudentActions.STUNDENT_LIST_FILTER_TRAY.APPLY_FILTERS,
+            type: StudentActions.STUDENT_LIST_FILTER_TRAY.APPLY_FILTERS,
             payload: { appliedStudentListFilters: newAppliedFilters }
         })
     }
@@ -110,7 +110,7 @@ const StudentManager = () => {
     useEffect(() => {
         setSearchText(appliedStudentListFilters.search)
         getUpdatedStudentList();
-    }, [appliedStudentListFilters, studentListPagination.page, refreshStudentList === true])
+    }, [appliedStudentListFilters.search, studentListPagination.page, refreshStudentList])
 
 
     return (
@@ -142,7 +142,7 @@ const StudentManager = () => {
                             <Grid item xs={2}>
                                 <Button
                                     onClick={() => dispatch({
-                                        type: StudentActions.STUNDENT_LIST_FILTER_TRAY.TOGGLE
+                                        type: StudentActions.STUDENT_LIST_FILTER_TRAY.TOGGLE
                                     })}
                                     variant='outlined'
                                     sx={{ height: 40, marginLeft: 2 }}

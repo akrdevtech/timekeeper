@@ -21,14 +21,14 @@ const StepperStep = (props) => {
 
     return (
         <Grid container direction="row" justifyContent="space-between" alignItems="center"
-            sx={{ minWidth: "100%", padding: 2, zIndex: 2 }}
+            sx={{ minWidth: "100%", padding: 2, zIndex: 2, cursor: 'pointer' }}
+            onClick={() => { handleActiveTabChange(thisStep.tabId) }}
         >
             <Grid item xs={2}>
                 <Grid container direction="row" justifyContent="center" alignItems="center"
                     sx={{
                         borderRadius: 25, width: 25, height: 25, backgroundColor: stepColor
                     }}
-                    onClick={() => { handleActiveTabChange(thisStep.tabId) }}
                 >
                     {thisStep.status === "success" ?
                         <CheckIcon sx={{ color: "white" }} /> :

@@ -30,7 +30,7 @@ const FilterTray = () => {
     const handleApplyFilters = () => {
         const newAppliedFilters = { ...appliedStudentListFilters, admission, graduation, presence, course };
         dispatch({
-            type: StudentActions.STUNDENT_LIST_FILTER_TRAY.APPLY_FILTERS,
+            type: StudentActions.STUDENT_LIST_FILTER_TRAY.APPLY_FILTERS,
             payload: { appliedStudentListFilters: newAppliedFilters }
         })
     }
@@ -54,6 +54,7 @@ const FilterTray = () => {
     const availableCourses = [
         { value: "IELTS_REGULAR", label: 'IELTS REGULAR' },
         { value: "IELTS_WEEKEND", label: 'IELTS WEEKEND' },
+        { value: "IELTS_TEST1", label: 'IELTS TEST 1' },
     ]
 
     if (!filterTrayToggle)
@@ -163,7 +164,7 @@ const FilterTray = () => {
                         <IconButton
                             color="error"
                             onClick={() => dispatch({
-                                type: StudentActions.STUNDENT_LIST_FILTER_TRAY.TOGGLE
+                                type: StudentActions.STUDENT_LIST_FILTER_TRAY.TOGGLE
                             })}
                         >
                             <CloseIcon />

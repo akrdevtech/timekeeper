@@ -95,7 +95,7 @@ const getAllStudentsByFilter = {
         page: Joi.number().required(),
         limit: Joi.number(),
         search: Joi.string(),
-        course: Joi.string(),
+        course: Joi.alternatives().try(Joi.array().items(Joi.string()), Joi.string()),
         admission: Joi.string(),
         graduation: Joi.string(),
         presence: Joi.string(),
