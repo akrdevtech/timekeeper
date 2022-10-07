@@ -4,7 +4,6 @@ import DetailsTabButtons from './components/DetailsTabButtons';
 
 export default function DetailsTabs(props) {
     const { changeActiveTab, activeTab, tabs } = props;
-    console.log({changeActiveTab, activeTab, tabs});
     const tabSize = tabs.length ? 12 / tabs.length : 12;
     return (
         <Grid container direction="row">

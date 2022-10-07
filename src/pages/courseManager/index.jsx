@@ -6,6 +6,7 @@ import CourseActions from './Actions';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import courseApis from '../../api/courseServices';
 import CourseList from './components/CoursesList';
+import CourseDetails from './components/CourseDetails';
 
 const CourseManager = () => {
     const [state, dispatch] = useContext(CourseContext);
@@ -16,6 +17,8 @@ const CourseManager = () => {
         selectedCourseId,
         courseListPagination,
         refreshCourseList,
+        selectedCourseInfo,
+        courseDetailsActiveTab
     } = state;
 
     const [searchText, setSearchText] = useState(appliedCourseListFilters.search);
@@ -57,6 +60,10 @@ const CourseManager = () => {
                 }
             });
         });
+    }
+
+    const changeCourseDetailsActiveTab = (activeTabName) => {
+        dispatch({ type: CourseActions.COURSE_DETAILS.CHANGE_TABS, payload: { activeTabName } });
     }
 
     useEffect(() => {
@@ -126,11 +133,11 @@ const CourseManager = () => {
                 </Grid>
             </Grid>
             <Grid item xs={12} lg={4} sx={{ minHeight: window.innerHeight }}>
-                {/* <StudentProfile
-                    selectedStudentInfo={selectedStudentInfo}
-                    studentDetailsActiveTab={studentDetailsActiveTab}
-                    changeStudentDetailsActiveTab={changeStudentDetailsActiveTab}
-                /> */}
+                <CourseDetails
+                    selectedCourseInfo={selectedCourseInfo}
+                    courseDetailsActiveTab={courseDetailsActiveTab}
+                    changeCourseDetailsActiveTab={changeCourseDetailsActiveTab}
+                />
             </Grid>
             {/* <AddStudentWizard open={isAddStudentWizardOpen} handleClose={closeAddStudentWizard} handleCreateNewStudent={handleCreateNewStudent} /> */}
         </Grid>
