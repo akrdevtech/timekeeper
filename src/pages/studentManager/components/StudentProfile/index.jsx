@@ -1,11 +1,13 @@
 import React from 'react'
 import { Grid, Paper } from '@mui/material'
 import StudentProfileHeader from './components/StudentDetailsHeader'
-import StudentDetailsTabs from './components/StudentDetailTabs'
+import DetailsTabs from '../../../../components/common/DetailTabs'
 import StudentProfileDetails from './components/StudentProfileDetails'
 import userDetailsMissingIcon from "../../../../assets/images/placeholders/userDetailsMissing.svg";
 import StudentAttendanceDetails from './components/StudentAttendanceDetails'
-
+import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 
 const getActiveTab = (detailsTab) => {
     switch (detailsTab) {
@@ -14,6 +16,13 @@ const getActiveTab = (detailsTab) => {
         default: return <StudentProfileDetails />
     }
 }
+
+const tabs = [
+    { tabId: 'profile', tabIcon: <PermIdentityOutlinedIcon /> },
+    { tabId: 'attendance', tabIcon: <CalendarMonthOutlinedIcon /> },
+    { tabId: 'performance', tabIcon: <BarChartOutlinedIcon /> }
+]
+
 const StudentProfile = (props) => {
     const { selectedStudentInfo, studentDetailsActiveTab, changeStudentDetailsActiveTab } = props;
     return (
@@ -24,9 +33,10 @@ const StudentProfile = (props) => {
                     <br />
                     {selectedStudentInfo ? (
                         <>
-                            <StudentDetailsTabs
-                                changeStudentDetailsActiveTab={changeStudentDetailsActiveTab}
-                                studentDetailsActiveTab={studentDetailsActiveTab}
+                            <DetailsTabs
+                                changeActiveTab={changeStudentDetailsActiveTab}
+                                activeTab={studentDetailsActiveTab}
+                                tabs={tabs}
                             />
                             <br />
                             {getActiveTab(studentDetailsActiveTab)}

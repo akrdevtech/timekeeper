@@ -94,7 +94,7 @@ const FilterTray = () => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} lg={1}></Grid>
+                    <Grid item xs={12} lg={7}></Grid>
                     <Grid item xs={12} lg={1}>
                         <Button
                             variant='outlined' color="primary" fullWidth sx={{ minHeight: 40 }}

@@ -21,7 +21,7 @@ const initialState = {
     isAddCourseWizardOpen: false,
     courseListPagination: {
         page: 0,
-        limit: 8,
+        limit: 10,
         totalPages: 0,
     },
     snackBarAttributes: {
