@@ -107,6 +107,12 @@ const StudentProfileHeader = (props) => {
                         }
                     });
                 })
+            case "remove":
+                return studentApis.deleteStudent(selectedStudentInfo.id).then(() => {
+                    dispatch({
+                        type: StudentActions.STUDENT_DETAILS.ACCOUNT.REMOVE,
+                    });
+                })
 
 
             default: console.log(mode); break;

@@ -34,6 +34,74 @@ module.exports = (app) => {
         }
     }
 
+    const enrollStudentToCourse = async (courseId, numberOfStudents) => {
+        try {
+            const existingCourse = await getCourseByCourseId(courseId);
+            const newAttendingCount = Number(existingCourse.studentsAttending) + Number(numberOfStudents);
+            const updated = await Courses.update(
+                { studentsAttending: newAttendingCount },
+                { where: { courseId } }
+            )
+            return updated;
+        } catch (error) {
+            console.log({ error });
+            throw new DbError(null, error.message);
+        }
+    }
+
+    const expellStudentFromCourse = async (courseId, hasGraduated, numberOfStudents) => {
+        try {
+            const existingCourse = await getCourseByCourseId(courseId);
+            let newAttendingCount = Number(existingCourse.studentsAttending);
+            let newGraduatingCount = Number(existingCourse.studentsGraduated);
+            if (hasGraduated) {
+                newGraduatingCount = newGraduatingCount - Number(numberOfStudents);
+            } else {
+                newAttendingCount = newAttendingCount - Number(numberOfStudents);
+            }
+            const updated = await Courses.update(
+                { studentsAttending: newAttendingCount, studentsGraduated: newGraduatingCount },
+                { where: { courseId } }
+            )
+            return updated;
+        } catch (error) {
+            console.log({ error });
+            throw new DbError(null, error.message);
+        }
+    }
+
+    const studentGraduateCourse = async (courseId, numberOfStudents) => {
+        try {
+            const existingCourse = await getCourseByCourseId(courseId);
+            const newAttendingCount = Number(existingCourse.studentsAttending) - Number(numberOfStudents);
+            const newGraduatingCount = Number(existingCourse.studentsGraduated) + Number(numberOfStudents);
+            const updated = await Courses.update(
+                { studentsAttending: newAttendingCount, studentsGraduated: newGraduatingCount },
+                { where: { courseId } }
+            )
+            return updated;
+        } catch (error) {
+            console.log({ error });
+            throw new DbError(null, error.message);
+        }
+    }
+
+    const studentPursueCourse = async (courseId, numberOfStudents) => {
+        try {
+            const existingCourse = await getCourseByCourseId(courseId);
+            const newAttendingCount = Number(existingCourse.studentsAttending) + Number(numberOfStudents);
+            const newGraduatingCount = Number(existingCourse.studentsGraduated) - Number(numberOfStudents);
+            const updated = await Courses.update(
+                { studentsAttending: newAttendingCount, studentsGraduated: newGraduatingCount },
+                { where: { courseId } }
+            )
+            return updated;
+        } catch (error) {
+            console.log({ error });
+            throw new DbError(null, error.message);
+        }
+    }
+
     const getCourseByCourseId = async (courseId) => {
         try {
             const courseData = await Courses.findOne({
@@ -89,5 +157,10 @@ module.exports = (app) => {
         createNewCourse,
         getAllCoursesByFilter,
         getAllActiveCoursesList,
+        getCourseByCourseId,
+        enrollStudentToCourse,
+        expellStudentFromCourse,
+        studentGraduateCourse,
+        studentPursueCourse,
     }
 }

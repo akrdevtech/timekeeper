@@ -103,6 +103,15 @@ module.exports = (app) => {
         return attendanceData;
     }
 
+    const deleteAttendanceByStudentId = async (studentId) => {
+        const attendanceData = await Attendances.destroy({
+            where: {
+                studentId
+            }
+        });
+        return attendanceData;
+    }
+
     const updateAttendance = async (attendanceId, updateParams) => {
         return await Attendances.update({
             studentId: updateParams.studentId,
@@ -125,5 +134,6 @@ module.exports = (app) => {
         getAttendanceById,
         updateAttendance,
         deleteAttendanceById,
+        deleteAttendanceByStudentId,
     }
 }

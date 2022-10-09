@@ -135,6 +135,24 @@ const createNewStudent = async (createParams) => {
     })
 }
 
+const deleteStudent = (studentId) => {
+    return api.delete(`/students/${studentId}`).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                return null;
+            }
+            console.log('No response data');
+            return {};
+        }
+        console.log('Error occured while communicating with api');
+        return null;
+    })
+}
 const studentClockIn = (studentId, date = new Date().toISOString()) => {
     return api.post(`/students/${studentId}/clock-in`, { clockedInAt: date }).then((response) => {
         if (response) {
@@ -292,5 +310,6 @@ const studentApis = {
     activateStudent,
     studentPursueCourse,
     studentGraduateCourse,
+    deleteStudent,
 }
 export default studentApis;

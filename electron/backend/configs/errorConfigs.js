@@ -25,6 +25,7 @@ module.exports = {
     },
     course:{
       COURSE_EXIST: 'COURSE_EXIST',
+      COURSE_DOES_NOT_EXIST: 'COURSE_DOES_NOT_EXIST',
     },
     organizations: {
       ORGANIZATION_DOES_NOT_EXIST: 'ORGANIZATION_DOES_NOT_EXIST',
@@ -59,5 +60,6 @@ module.exports = {
     ADDRESS_CREATION_FAILED: "Failed to create address",
     FAILED_CLOCK_IN: 'Student failed to clock in',
     COURSE_EXIST: 'Course already exists',
+    COURSE_DOES_NOT_EXIST: 'Course doesnot exist'
   },
 };

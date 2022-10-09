@@ -102,6 +102,12 @@ const getAllStudentsByFilter = {
     })
 }
 
+const deleteStudent = {
+    params: Joi.object({
+        studentId: Joi.string().uuid().required(),
+    })
+}
+
 module.exports = {
     createNewStudent,
     studentClockIn,
@@ -112,4 +118,5 @@ module.exports = {
     studentGraduateCourse,
     studentPursueCourse,
     getAllStudentsByFilter,
+    deleteStudent,
 };

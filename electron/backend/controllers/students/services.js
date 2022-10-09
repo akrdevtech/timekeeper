@@ -101,6 +101,10 @@ module.exports = (app) => {
         return await Students.update({ hasGraduated: true }, { where: { id: studentId } })
     }
 
+    const deleteStudent = async (studentId) => {
+        return await Students.destroy({ where: { id: studentId } });
+    }
+
     return {
         createNewStudent,
         getStudentsById,
@@ -113,5 +117,6 @@ module.exports = (app) => {
         deactivateStudent,
         studentGraduateCourse,
         studentPursueCourse,
+        deleteStudent
     }
 }

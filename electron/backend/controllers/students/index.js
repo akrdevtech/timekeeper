@@ -16,6 +16,10 @@ module.exports = (app) => {
         validatorMiddleware(studentValidators.createNewStudent),
         student.createNewStudent,
     ]);
+    router.delete('/:studentId', [
+        validatorMiddleware(studentValidators.deleteStudent),
+        student.deleteStudent,
+    ]);
     router.post('/:studentId/clock-in', [
         validatorMiddleware(studentValidators.studentClockIn),
         student.studentClockIn,

@@ -1,5 +1,6 @@
 const studentServices = require('./services');
 const attendanceServices = require('../attendance/services');
+const courseServices = require('../courses/services');
 
 module.exports = (app) => {
 
@@ -16,6 +17,9 @@ module.exports = (app) => {
                         STUDENT_IS_PRESENT,
                         STUDENT_IS_ABSENT,
                         FAILED_CLOCK_IN
+                    },
+                    course: {
+                        COURSE_DOES_NOT_EXIST
                     }
                 }
             }
@@ -24,6 +28,7 @@ module.exports = (app) => {
 
     const students = studentServices(app);
     const attendanceService = attendanceServices(app);
+    const courseService = courseServices(app);
 
     const getAllStudentsByFilter = async (req, res, next) => {
         const { page, limit, search, course, admission, graduation, presence } = req.query;
@@ -64,7 +69,12 @@ module.exports = (app) => {
             if (existingStudent) {
                 return next(new MicroserviceError(STUDENT_EXIST))
             }
+            const selectedCourse = await courseService.getCourseByCourseId(createParams.course);
+            if (!selectedCourse) {
+                return next(new MicroserviceError(COURSE_DOES_NOT_EXIST))
+            }
             const id = await students.createNewStudent(createParams);
+            await courseService.enrollStudentToCourse(createParams.course, 1);
             res.locals.data = id;
             next();
         } catch (error) {
@@ -199,6 +209,7 @@ module.exports = (app) => {
             }
             await students.studentPursueCourse(studentId);
             const studentData = await students.getStudentsById(studentId);
+            await courseService.studentPursueCourse(student.course, 1);
             res.locals.data = studentData;
             next();
         } catch (error) {
@@ -216,13 +227,32 @@ module.exports = (app) => {
             }
             await students.studentGraduateCourse(studentId);
             const studentData = await students.getStudentsById(studentId);
+            await courseService.studentGraduateCourse(student.course, 1);
             res.locals.data = studentData;
             next();
         } catch (error) {
             next(error)
         }
     }
-    
+
+    const deleteStudent = async (req, res, next) => {
+        try {
+            const { studentId } = req.params;
+
+            const student = await students.getStudentsById(studentId);
+            if (!student) {
+                return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
+            }
+            await students.deleteStudent(studentId);
+            await courseService.expellStudentFromCourse(student.course,student.hasGraduated, 1);
+            await attendanceService.deleteAttendanceByStudentId(studentId);
+            res.locals.data = { deleted: true };
+            next();
+        } catch (error) {
+            next(error)
+        }
+    }
+
     return {
         createNewStudent,
         studentClockIn,
@@ -233,6 +263,7 @@ module.exports = (app) => {
         getAttendanceOverview,
         studentGraduateCourse,
         studentPursueCourse,
+        deleteStudent,
     }
 }
 

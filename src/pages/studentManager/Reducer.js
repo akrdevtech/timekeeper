@@ -186,6 +186,12 @@ const StudentReducer = (state, action) => {
                     refreshAttendanceCalendar: true,
                 },
             }
+        case StudentActions.STUDENT_DETAILS.ACCOUNT.REMOVE:
+            return {
+                ...state,
+                refreshStudentList: true,
+                selectedStudentInfo: undefined,
+            }
         case StudentActions.STUDENT_DETAILS.ACCOUNT.ACTIVATE:
             return {
                 ...state,
