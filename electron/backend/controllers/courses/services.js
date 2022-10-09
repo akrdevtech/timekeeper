@@ -1,4 +1,5 @@
 const { Op } = require("sequelize");
+const CourseEnums = require("./enums");
 
 module.exports = (app) => {
     const {
@@ -45,6 +46,14 @@ module.exports = (app) => {
 
     }
 
+    const getAllActiveCoursesList = async () => {
+        const result = await Courses.findAll({
+            attributes: ['courseName', 'courseId'],
+            where: { status: CourseEnums.CourseStatus.ACTIVE }
+        });
+        return result;
+    }
+
     const getAllCoursesByFilter = async (filters) => {
         const { page, limit, search, status } = filters;
         const offset = page * limit;
@@ -79,5 +88,6 @@ module.exports = (app) => {
     return {
         createNewCourse,
         getAllCoursesByFilter,
+        getAllActiveCoursesList,
     }
 }

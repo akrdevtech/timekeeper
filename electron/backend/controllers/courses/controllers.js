@@ -11,6 +11,12 @@ module.exports = (app) => {
         next();
     }
 
+    const getAllActiveCoursesList = async (req, res, next) => {
+        const courseList = await course.getAllActiveCoursesList();
+        res.locals.data = courseList;
+        next();
+    }
+
     const createNewCourse = async (req, res, next) => {
         console.log("creating course");
         try {
@@ -41,6 +47,7 @@ module.exports = (app) => {
     return {
         createNewCourse,
         getAllCoursesByFilter,
+        getAllActiveCoursesList,
     }
 }
 

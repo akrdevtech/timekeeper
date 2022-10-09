@@ -12,6 +12,10 @@ module.exports = (app) => {
         course.getAllCoursesByFilter,
     ]);
 
+    router.get('/active-list',[
+        course.getAllActiveCoursesList,
+    ])
+
     router.post('/', [
         validatorMiddleware(courseValidators.createNewCourse),
         course.createNewCourse,
