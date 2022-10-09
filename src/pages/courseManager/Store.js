@@ -36,6 +36,16 @@ const initialState = {
     },
     filterTrayToggle: false,
     courseDetailsActiveTab: 'basic',//'attendance'
+    courseDetailsStudents: {
+        studentList: [],
+        pagination: {
+            page: 0,
+            limit: 10,
+            totalPages: 0,
+        },
+        refreshStudentList: false,
+        selectedStudentInCourseInfo: undefined,
+    }
 };
 
 const CourseStore = ({ children }) => {

@@ -50,21 +50,21 @@ const getStudentsList = async (page, limit, appliedStudentListFilters) => {
 
     // return Promise.resolve(studentsList);
     let url = `/students?page=${page}&limit=${limit}`;
-    if (admission !== 'any') {
+    if (admission && admission !== 'any') {
         url = `${url}&admission=${admission}`
     }
-    if (graduation !== 'any') {
+    if (graduation && graduation !== 'any') {
         url = `${url}&graduation=${graduation}`
     }
-    if (presence !== 'any') {
+    if (presence && presence !== 'any') {
         url = `${url}&presence=${presence}`
     }
-    if (course !== 'any' && !course.includes('any')) {
+    if (course && course !== 'any' && !course.includes('any')) {
         course.map(cid => {
             return url = `${url}&course=${cid}`
         })
     }
-    if (search !== '') {
+    if (search && search !== '') {
         url = `${url}&search=${search}`
     }
     return await api.get(url).then((response) => {
@@ -230,7 +230,7 @@ const deactivateStudent = (studentId) => {
                 return studentData;
             }
             console.log('No response data');
-            return { };
+            return {};
         }
         console.log('Error occured while communicating with api');
         return null;
@@ -251,7 +251,7 @@ const activateStudent = (studentId) => {
                 return studentData;
             }
             console.log('No response data');
-            return { };
+            return {};
         }
         console.log('Error occured while communicating with api');
         return null;
@@ -272,7 +272,7 @@ const studentPursueCourse = (studentId) => {
                 return studentData;
             }
             console.log('No response data');
-            return { };
+            return {};
         }
         console.log('Error occured while communicating with api');
         return null;
@@ -293,7 +293,7 @@ const studentGraduateCourse = (studentId) => {
                 return studentData;
             }
             console.log('No response data');
-            return { };
+            return {};
         }
         console.log('Error occured while communicating with api');
         return null;
