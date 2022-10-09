@@ -7,11 +7,13 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import courseApis from '../../api/courseServices';
 import CourseList from './components/CoursesList';
 import CourseDetails from './components/CourseDetails';
+import AddCourseWizard from './components/AddCourseWizard';
 
 const CourseManager = () => {
     const [state, dispatch] = useContext(CourseContext);
 
     const {
+        isAddCourseWizardOpen,
         appliedCourseListFilters,
         coursesList,
         selectedCourseId,
@@ -66,6 +68,32 @@ const CourseManager = () => {
         dispatch({ type: CourseActions.COURSE_DETAILS.CHANGE_TABS, payload: { activeTabName } });
     }
 
+    const closeAddCourseWizard = () => {
+        dispatch({ type: CourseActions.COURSE_WIZARD.CLOSE });
+    };
+    const openAddCourseWizard = () => {
+        dispatch({ type: CourseActions.COURSE_WIZARD.OPEN });
+    };
+
+    const handleCreateNewCourse = (courseCreateParams) => {
+        const { page, limit } = courseListPagination;
+        courseApis.createNewCourse(courseCreateParams).then(res => {
+            if (!res.success) {
+                dispatch({ type: CourseActions.COURSE_WIZARD.ADD_COURSE.FAILURE });
+            }
+            courseApis.getCourseList(page, limit, appliedCourseListFilters).then(courseListData => {
+                const { count, rows } = courseListData
+                dispatch({
+                    type: CourseActions.COURSE_WIZARD.ADD_COURSE.SUCCESS,
+                    payload: {
+                        pagination: { page, limit, totalPages: Math.ceil(count / limit) },
+                        coursesList: rows,
+                    }
+                });
+            });
+        })
+    }
+
     useEffect(() => {
         getUpdatedCourseList();
     }, [])
@@ -116,7 +144,7 @@ const CourseManager = () => {
                                 <Button
                                     variant='contained'
                                     sx={{ height: 40, float: "right" }}
-                                // onClick={openAddStudentWizard}
+                                    onClick={openAddCourseWizard}
                                 >
                                     Add Course
                                 </Button>
@@ -139,7 +167,11 @@ const CourseManager = () => {
                     changeCourseDetailsActiveTab={changeCourseDetailsActiveTab}
                 />
             </Grid>
-            {/* <AddStudentWizard open={isAddStudentWizardOpen} handleClose={closeAddStudentWizard} handleCreateNewStudent={handleCreateNewStudent} /> */}
+            <AddCourseWizard
+                open={isAddCourseWizardOpen}
+                handleClose={closeAddCourseWizard}
+                handleCreateNewCourse={handleCreateNewCourse}
+            />
         </Grid>
     )
 }

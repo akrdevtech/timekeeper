@@ -1,41 +1,29 @@
 import React, { useState } from 'react'
 import { Dialog, Grid, IconButton, } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
-import WizardStudentContactInfo from './components/WizardStudentContactInfo';
-import WizardStudentBasicInfo from './components/WizardStudentBasicInfo';
-import WizardStudentCourseInfo from './components/WizardStudentCourseInfo';
-import WizardStudentGaurdianInfo from './components/WizardStudentGaurdianInfo';
-import AddStudentWizardData from "./components/data";
+import WizardCourseBasicInfo from './components/WizardCourseBasicInfo';
+import AddCourseWizardData from "./components/data";
 import AddStudentWizardSchemas from "./components/schema";
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import VerticalLinearStepper from '../../../../components/common/VerticalLinearStepper';
 
-const AddStudentWizard = props => {
-    const { open, handleClose, handleCreateNewStudent } = props;
+const AddCourseWizard = props => {
+    const { open, handleClose, handleCreateNewCourse } = props;
 
     const {
         stepperSteps: defaultSteps,
         tabIds: defaultTabIds,
         stepStatus: defaultStatus,
         basicInfoDefaultData,
-        contactInfoDefaultData,
-        courseInfoDefaultData,
-        gaurdianInfoDefaultData,
         defaultErrorObject
-    } = AddStudentWizardData;
+    } = AddCourseWizardData;
 
     const {
         basicInfoSchema,
-        contactInfoSchema,
-        courseInfoSchema,
-        gaurdianInfoSchema
     } = AddStudentWizardSchemas;
 
     const [hasVerified, setHasVerified] = useState(false);
     const [basicInfo, setBasicInfo] = useState(basicInfoDefaultData);
-    const [contactInfo, setContactInfo] = useState(contactInfoDefaultData);
-    const [courseInfo, setCourseInfo] = useState(courseInfoDefaultData);
-    const [gaurdianInfo, setGaurdianInfo] = useState(gaurdianInfoDefaultData);
 
     const [steps, setSteps] = useState(defaultSteps)
     const [validationErrorsObject, setValidationErrors] = useState(defaultErrorObject)
@@ -44,9 +32,6 @@ const AddStudentWizard = props => {
     const validateThisTab = (thisTabId) => {
         switch (thisTabId) {
             case defaultTabIds.BASIC_INFO: return basicInfoSchema.validate(basicInfo, { abortEarly: false });
-            case defaultTabIds.CONTACT_INFO: return contactInfoSchema.validate(contactInfo, { abortEarly: false });
-            case defaultTabIds.COURSE_INFO: return courseInfoSchema.validate(courseInfo, { abortEarly: false });
-            case defaultTabIds.GAURDIAN_INFO: return gaurdianInfoSchema.validate(gaurdianInfo, { abortEarly: false });
             default: return;
         }
     }
@@ -104,49 +89,25 @@ const AddStudentWizard = props => {
 
     const handleResetData = () => {
         setBasicInfo(basicInfoDefaultData);
-        setContactInfo(contactInfoDefaultData);
-        setCourseInfo(courseInfoDefaultData);
-        setGaurdianInfo(gaurdianInfoDefaultData);
         setSteps(defaultSteps);
         setActiveTab(defaultTabIds.BASIC_INFO);
     }
 
-    const createStudent = () => {
-        handleCreateNewStudent({ basicInfo, contactInfo, courseInfo, gaurdianInfo })
+    const createCourse = () => {
+        handleCreateNewCourse({ basicInfo })
     }
 
     const getActiveTabComponent = () => {
         switch (activeTab) {
             case defaultTabIds.BASIC_INFO:
-                return <WizardStudentBasicInfo
+                return <WizardCourseBasicInfo
                     handleActiveTabChange={handleActiveTabChange}
                     basicInfo={basicInfo}
                     setBasicInfo={setBasicInfo}
                     errors={validationErrorsObject.basicInfo}
-                />;
-            case defaultTabIds.CONTACT_INFO:
-                return <WizardStudentContactInfo
-                    handleActiveTabChange={handleActiveTabChange}
-                    contactInfo={contactInfo}
-                    setContactInfo={setContactInfo}
-                    errors={validationErrorsObject.contactInfo}
-                />;
-            case defaultTabIds.COURSE_INFO:
-                return <WizardStudentCourseInfo
-                    handleActiveTabChange={handleActiveTabChange}
-                    courseInfo={courseInfo}
-                    setCourseInfo={setCourseInfo}
-                    errors={validationErrorsObject.courseInfo}
-                />;
-            case defaultTabIds.GAURDIAN_INFO:
-                return <WizardStudentGaurdianInfo
-                    handleActiveTabChange={handleActiveTabChange}
-                    gaurdianInfo={gaurdianInfo}
-                    setGaurdianInfo={setGaurdianInfo}
+                    createCourse={createCourse}
                     handleValidateAll={handleValidateAll}
-                    createStudent={createStudent}
                     hasVerified={hasVerified}
-                    errors={validationErrorsObject.gaurdianInfo}
                 />;
             default: return;
         }
@@ -156,7 +117,7 @@ const AddStudentWizard = props => {
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg" >
             <Grid container direction="row" justifyContent="center" alignItems='center' sx={{ minHeight: 600 }}>
                 <Grid item lg={4} sx={{ backgroundColor: "#fff" }}>
-                    <VerticalLinearStepper steps={steps} handleActiveTabChange={handleActiveTabChange} title="ADD STUDENT"/>
+                    <VerticalLinearStepper steps={steps} handleActiveTabChange={handleActiveTabChange} title="ADD COURSE"/>
                 </Grid>
                 <Grid item lg={8} sx={{ backgroundColor: "#F5F8FB", minHeight: 600 }}>
                     <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -185,6 +146,6 @@ const AddStudentWizard = props => {
     )
 }
 
-AddStudentWizard.propTypes = {}
+AddCourseWizard.propTypes = {}
 
-export default AddStudentWizard
+export default AddCourseWizard
