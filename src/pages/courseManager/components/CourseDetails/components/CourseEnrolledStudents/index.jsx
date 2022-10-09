@@ -5,6 +5,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PaginationButtons from '../../../../../../components/common/PaginationButtons';
 import studentApis from '../../../../../../api/studentServices';
 import CourseActions from '../../../../Actions';
+import CourseDeatilsStudentItem from './components/CourseDeatilsStudentItem';
 
 const CourseEnrolledStudents = (props) => {
     const { activeTab } = props;
@@ -39,18 +40,17 @@ const CourseEnrolledStudents = (props) => {
 
     useEffect(() => {
         console.log(`CourseEnrolledStudents ${graduated}`);
-        studentApis.getStudentsList(page, limit, { course: [selectedCourseInfo.courseId] }).then(studentListData => {
+        studentApis.getStudentsList(page, limit, { course: [selectedCourseInfo.courseId], graduation: graduated }).then(studentListData => {
             const { count, rows } = studentListData
             console.log(rows);
-            // dispatch({ type: CourseActions.COURSE_DETAILS.STUDENTS_LIST.GET_UPDATED });
-            // dispatch({
-            //     type: CourseActions.COURSE_DETAILS.STUDENTS_LIST.GET_UPDATED,
-            //     payload: {
-            //         pagination: { page, limit, totalPages: Math.ceil(count / limit) },
-            //         // studentList: rows,
-            //         // refreshStudentList: false,
-            //     }
-            // });
+            dispatch({
+                type: CourseActions.COURSE_DETAILS.ENROLLMENTS.GET_UPDATED_ENROLLMENTS,
+                payload: {
+                    pagination: { page, limit, totalPages: Math.ceil(count / limit) },
+                    studentList: rows,
+                    refreshStudentList: false,
+                }
+            });
         })
     }, [activeTab === 'students', graduated, page])
 
@@ -58,15 +58,29 @@ const CourseEnrolledStudents = (props) => {
         return <></>
     }
     return (
-        <Paper elevation={0} sx={{ backgroundColor: "#F5F8FB", marginTop: 2, borderRadius: 2, padding: 1 }} >
+        <Paper elevation={0} sx={{ backgroundColor: "#F5F8FB", marginTop: 2, borderRadius: 2, padding: 1, paddingBottom: 2 }} >
             <Grid container direction="row">
                 <Grid item xs={12} lg={6}>
                     <table style={{ verticalAlign: 'center' }}>
                         <tbody>
                             <tr>
-                                <td><Typography variant='body1' color="textSecondary" ><b>Graduation &nbsp;&nbsp;</b></Typography></td>
-                                <td><Typography variant='caption' color="textSecondary" ><b>{graduated}</b></Typography> </td>
-                                <td><Typography variant='body2' color="textSecondary"><IconButton onClick={handleClick}><ArrowDropDownIcon /></IconButton></Typography></td>
+                                <td>
+                                    <Typography variant='body1' color="textSecondary" >
+                                        <b>Graduation &nbsp;&nbsp;</b>
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography variant='caption' color="textSecondary" >
+                                        <b>{graduated}</b>
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <Typography variant='body2' color="textSecondary">
+                                        <IconButton onClick={handleClick}>
+                                            <ArrowDropDownIcon fontSize='small' />
+                                        </IconButton>
+                                    </Typography>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -88,9 +102,14 @@ const CourseEnrolledStudents = (props) => {
                 <MenuItem onClick={() => handleGraduationChange("completed")}>Completed</MenuItem>
             </Menu>
 
-            <Grid container direction="row">
+            <Grid container direction="row"
+                justifyContent="center"
+                alignItems="flex-start"
+            >
                 {studentList.map(litem => (
-                    litem.name
+                    <Grid item lg={12} key={litem.id} sx={{ marginTop: 1 }}>
+                        <CourseDeatilsStudentItem studentInfo={litem} handleSelectStudentId />
+                    </Grid>
                 ))}
             </Grid>
         </Paper>

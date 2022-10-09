@@ -200,6 +200,15 @@ const CourseReducer = (state, action) => {
                 refreshCourseList: true,
                 selectedCourseInfo: action.payload.courseData,
             }
+        case CourseActions.COURSE_DETAILS.ENROLLMENTS.GET_UPDATED_ENROLLMENTS:
+            return {
+                ...state,
+                courseDetailsStudents:{
+                    ...state.courseDetailsStudents,
+                    studentList:action.payload.studentList,
+                    pagination: action.payload.pagination,
+                },
+            }
         default:
             return state;
     }
