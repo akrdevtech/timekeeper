@@ -137,6 +137,7 @@ const AddStudentWizard = props => {
                     courseInfo={courseInfo}
                     setCourseInfo={setCourseInfo}
                     errors={validationErrorsObject.courseInfo}
+                    activeTab={activeTab}
                 />;
             case defaultTabIds.GAURDIAN_INFO:
                 return <WizardStudentGaurdianInfo

@@ -1,12 +1,15 @@
 import { Button, Grid, MenuItem, TextField } from '@mui/material';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useState } from 'react';
+import AddStudentWizardData from '../data'
+import courseApis from '../../../../../../api/courseServices';
 
 const WizardStudentCourseInfo = (props) => {
 
-  const { courseInfo, setCourseInfo, handleActiveTabChange, errors } = props;
+  const { courseInfo, setCourseInfo, handleActiveTabChange, errors, activeTab } = props;
 
   const { course, dateOfAdmission, admissionNumber } = courseInfo;
   const handleInputChange = (field, value) => {
@@ -16,6 +19,15 @@ const WizardStudentCourseInfo = (props) => {
   const errorKeys = errors.map(err => {
     return err.context.key
   })
+
+  const [courseList, setCourseList] = useState([]);
+
+  useEffect(() => {
+    courseApis.getAllActiveCoursesList().then(courseListData => {
+      setCourseList(courseListData);
+    })
+  }, [activeTab === AddStudentWizardData.tabIds.COURSE_INFO])
+
 
   return (
     <Grid item xs={11}>
@@ -39,8 +51,7 @@ const WizardStudentCourseInfo = (props) => {
               error={errorKeys.includes("course")}
             >
               <MenuItem key={undefined} value={undefined}></MenuItem>
-              <MenuItem key="IELTS_REGULAR" value="IELTS_REGULAR">IELTS REGULAR</MenuItem>
-              <MenuItem key="IELTS_WEEKEND" value="IELTS_WEEKEND">IELTS WEEKEND</MenuItem>
+              {courseList.map(cData => (<MenuItem key={cData.courseId} value={cData.courseId}>{cData.courseName}</MenuItem>))}
             </TextField>
           </Grid>
           <Grid item xs={12} lg={6}>

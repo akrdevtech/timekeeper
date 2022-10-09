@@ -64,8 +64,29 @@ const createNewCourse = async (createParams) => {
     })
 }
 
+const getAllActiveCoursesList = async () =>{
+    return await api.get(`courses/active-list`).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const rows = data.data;
+                return rows;
+            }
+            console.log('No response data');
+            return { count: 0, rows: [] };
+        }
+        console.log('Error occured while communicating with api');
+        return { count: 0, rows: [] };
+    })
+}
+
 const courseApis = {
     getCourseList,
     createNewCourse,
+    getAllActiveCoursesList,
 }
 export default courseApis;

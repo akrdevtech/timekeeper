@@ -1,9 +1,10 @@
 import { Button, Card, Checkbox, FormControl, Grid, Grow, IconButton, InputLabel, ListItemText, MenuItem, Select, TextField } from '@mui/material';
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { StudentContext } from '../../../../Store';
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import StudentActions from '../../../../Actions';
+import courseApis from '../../../../../../api/courseServices';
 
 const FilterTray = () => {
     const [state, dispatch] = useContext(StudentContext);
@@ -51,11 +52,13 @@ const FilterTray = () => {
         handleInputChange("course", ['any']);
     }
 
-    const availableCourses = [
-        { value: "IELTS_REGULAR", label: 'IELTS REGULAR' },
-        { value: "IELTS_WEEKEND", label: 'IELTS WEEKEND' },
-        { value: "IELTS_TEST1", label: 'IELTS TEST 1' },
-    ]
+    const [availableCourses,setAvailableCourses] = useState([]);
+
+    useEffect(() => {
+        courseApis.getAllActiveCoursesList().then(courseListData => {
+            setAvailableCourses(courseListData);
+        })
+      }, [filterTrayToggle === true])
 
     if (!filterTrayToggle)
         return <></>
@@ -132,10 +135,10 @@ const FilterTray = () => {
                                 renderValue={(selected) => selected.join(', ')}
                             >
                                 <MenuItem key="any" value="any"></MenuItem>
-                                {availableCourses.map((availableCourse) => (
-                                    <MenuItem key={availableCourse.value} value={availableCourse.value}>
-                                        <Checkbox checked={course.indexOf(availableCourse.value) > -1} />
-                                        <ListItemText primary={availableCourse.label} />
+                                {availableCourses.map((availableCourse,index) => (
+                                    <MenuItem key={index.toString()} value={availableCourse.courseId}>
+                                        <Checkbox checked={course.indexOf(availableCourse.courseId) > -1} />
+                                        <ListItemText primary={availableCourse.courseName} />
                                     </MenuItem>
                                 ))}
                                 <Button fullWidth onClick={handleUnselectAll}>Unselect All</Button>
