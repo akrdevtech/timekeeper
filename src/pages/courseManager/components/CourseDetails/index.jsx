@@ -6,12 +6,13 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import CourseProfileHeader from './components/CourseProfileHeader';
+import CourseBasicDetails from './components/CourseBasicDetails';
 
 const getActiveTab = (detailsTab) => {
     switch (detailsTab) {
         case 'syllabus': return <>Syllabus</>;
         case 'students': return <>Students</>
-        default: return <>Basic</>
+        default: return <CourseBasicDetails />
     }
 }
 
