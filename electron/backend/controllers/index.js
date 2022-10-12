@@ -4,6 +4,7 @@ const healthRoutes = require("./app/healthController");
 const students = require("./students");
 const attendance = require("./attendance");
 const courses = require("./courses");
+const settings = require("./settings");
 
 module.exports = (app) => {
 
@@ -12,6 +13,7 @@ module.exports = (app) => {
     router.use('/students', students(app));
     router.use('/attendance', attendance(app));
     router.use('/courses', courses(app));
+    router.use('/settings', settings(app));
 
     return router
 }

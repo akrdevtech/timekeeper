@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes, Model) => {
     Courses.init({
         id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
         courseId: { type: DataTypes.STRING, allowNull: false, unique: true },
+        code: { type: DataTypes.INTEGER, autoIncrement: true },
         courseName: { type: DataTypes.STRING, allowNull: false },
         duration: { type: DataTypes.NUMBER, allowNull: false, defaultValue: 0 },
         fee: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },

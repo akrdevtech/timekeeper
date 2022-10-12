@@ -14,7 +14,11 @@ module.exports = (app) => {
 
     router.get('/active-list',[
         course.getAllActiveCoursesList,
-    ])
+    ]);
+
+    router.get('/autogen',[
+        course.getNextCourseIndex,
+    ]);
 
     router.post('/', [
         validatorMiddleware(courseValidators.createNewCourse),

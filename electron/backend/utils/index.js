@@ -13,5 +13,5 @@ module.exports = {
   globalErrorHandler: erroreHandlerUtil(),
   errors: errorUtil,
   dateUtils: dateUtils(),
-  logger: logger(),
+  logger: logger,
 }

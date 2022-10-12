@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
 const initialLoaders = require('./jobs/initialLoaders');
+const settingServices = require('./controllers/settings/services')
 
 const controllers = require('./controllers');
 const utilities = require('./utils');
@@ -66,5 +67,6 @@ app.use(function (err, req, res, next) {
 });
 
 initialLoaders(app).markMissingAttendance();
+settingServices(app).performInitialMigration();
 
 module.exports = app;

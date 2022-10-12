@@ -122,6 +122,10 @@ module.exports = (app) => {
         return result;
     }
 
+    const getNextCourseIndex = async () => {
+        return Courses.max('code');
+    }
+
     const getAllCoursesByFilter = async (filters) => {
         const { page, limit, search, status } = filters;
         const offset = page * limit;
@@ -162,5 +166,6 @@ module.exports = (app) => {
         expellStudentFromCourse,
         studentGraduateCourse,
         studentPursueCourse,
+        getNextCourseIndex,
     }
 }

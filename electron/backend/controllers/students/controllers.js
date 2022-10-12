@@ -26,19 +26,28 @@ module.exports = (app) => {
         }
     } = app
 
+    const appLogger = logger("Students Controller")
+
     const students = studentServices(app);
     const attendanceService = attendanceServices(app);
     const courseService = courseServices(app);
 
     const getAllStudentsByFilter = async (req, res, next) => {
-        const { page, limit, search, course, admission, graduation, presence } = req.query;
-        const id = await students.getAllStudentsByFilter({ page, limit, search, course, admission, graduation, presence });
-        res.locals.data = id;
-        next();
+        try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015e1", req.txId, "Students get by filter");
+            const { page, limit, search, course, admission, graduation, presence } = req.query;
+            const id = await students.getAllStudentsByFilter({ page, limit, search, course, admission, graduation, presence });
+            res.locals.data = id;
+            next();
+        } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015e2", req.txId, error.message);
+            next(error)
+        }
     }
 
     const createNewStudent = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015e3", req.txId, "Students create new");
             const reqBody = req.body;
             const createParams = {
                 name: reqBody.name,
@@ -78,6 +87,7 @@ module.exports = (app) => {
             res.locals.data = id;
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015e4", req.txId, error.message);
             next(error)
         }
 
@@ -85,6 +95,8 @@ module.exports = (app) => {
 
     const studentClockIn = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015e5", req.txId, "Students clock in");
+
             const { clockedInAt } = req.body;
             const { studentId } = req.params;
 
@@ -117,12 +129,14 @@ module.exports = (app) => {
             res.locals.data = studentData;
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015e6", req.txId, error.message);
             next(error)
         }
     }
 
     const studentClockOut = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015e7", req.txId, "Students clock out");
             const { clockedOutAt } = req.body;
             const { studentId } = req.params;
 
@@ -145,12 +159,14 @@ module.exports = (app) => {
             res.locals.data = studentData;
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015e8", req.txId, error.message);
             next(error)
         }
     }
 
     const activateStudent = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015e9", req.txId, "Students activate");
             const { studentId } = req.params;
 
             const student = await students.getStudentsById(studentId);
@@ -162,12 +178,14 @@ module.exports = (app) => {
             res.locals.data = studentData;
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015f1", req.txId, error.message);
             next(error)
         }
     }
 
     const deactivateStudent = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015f2", req.txId, "Students activate");
             const { studentId } = req.params;
 
             const student = await students.getStudentsById(studentId);
@@ -179,12 +197,14 @@ module.exports = (app) => {
             res.locals.data = studentData;
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015f3", req.txId, error.message);
             next(error)
         }
     }
 
     const getAttendanceOverview = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015f4", req.txId, "Students get attendance overview");
             const { studentId } = req.params;
             const { month, year } = req.query;
             const student = await students.getStudentsById(studentId);
@@ -195,12 +215,14 @@ module.exports = (app) => {
             res.locals.data = overview;
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015f5", req.txId, error.message);
             next(error)
         }
     }
 
     const studentPursueCourse = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015f6", req.txId, "Students pursue course");
             const { studentId } = req.params;
 
             const student = await students.getStudentsById(studentId);
@@ -213,12 +235,14 @@ module.exports = (app) => {
             res.locals.data = studentData;
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015f7", req.txId, error.message);
             next(error)
         }
     }
 
     const studentGraduateCourse = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015f8", req.txId, "Students graduate course");
             const { studentId } = req.params;
 
             const student = await students.getStudentsById(studentId);
@@ -231,12 +255,14 @@ module.exports = (app) => {
             res.locals.data = studentData;
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015f9", req.txId, error.message);
             next(error)
         }
     }
 
     const deleteStudent = async (req, res, next) => {
         try {
+            appLogger.success("c5b1198a-d30d-418d-a8a0-82b1cd4015a1", req.txId, "Students delete");
             const { studentId } = req.params;
 
             const student = await students.getStudentsById(studentId);
@@ -244,11 +270,12 @@ module.exports = (app) => {
                 return next(new MicroserviceError(STUDENT_DOES_NOT_EXIST))
             }
             await students.deleteStudent(studentId);
-            await courseService.expellStudentFromCourse(student.course,student.hasGraduated, 1);
+            await courseService.expellStudentFromCourse(student.course, student.hasGraduated, 1);
             await attendanceService.deleteAttendanceByStudentId(studentId);
             res.locals.data = { deleted: true };
             next();
         } catch (error) {
+            appLogger.error("c5b1198a-d30d-418d-a8a0-82b1cd4015a2", req.txId, error.message);
             next(error)
         }
     }
