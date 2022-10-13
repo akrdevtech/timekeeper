@@ -1,6 +1,7 @@
 const studentServices = require('./services');
 const attendanceServices = require('../attendance/services');
 const courseServices = require('../courses/services');
+const enrollmentsServices = require('../enrollments/services');
 
 module.exports = (app) => {
 
@@ -31,6 +32,7 @@ module.exports = (app) => {
     const students = studentServices(app);
     const attendanceService = attendanceServices(app);
     const courseService = courseServices(app);
+    const enrollmentsService = enrollmentsServices(app);
 
     const getAllStudentsByFilter = async (req, res, next) => {
         try {
@@ -280,7 +282,44 @@ module.exports = (app) => {
         }
     }
 
+    const getWithPaddingZeros = (number) => {
+        if (number < 10) return `00${number}`;
+        if (number < 100) return `0${number}`;
+        return number;
+    }
+    const autogenerateAdmissionNumber = async (req, res, next) => {
+        try {
+            appLogger.success("26fce629-eeb0-48a3-a804-ffb696f592b1", req.txId, "Autogenerate Admission Number for Students");
+            const {
+                query: {
+                    courseId,
+                    dateOfAdmission,
+                }
+            } = req;
+            const courseInfo = await courseService.getCourseByCourseId(courseId);
+            if (!courseInfo) {
+                throw (new MicroserviceError(COURSE_DOES_NOT_EXIST));
+            }
+
+            const thisDate = new Date(dateOfAdmission);
+            const enrollmentsOfCourse = await enrollmentsService.getEnrollmentsForCourse(courseId, thisDate, thisDate);
+            const courseCode = getWithPaddingZeros(Number(courseInfo.code));
+            const enrollCount = enrollmentsOfCourse.length ?
+                getWithPaddingZeros(Number(enrollmentsOfCourse[0].enrolled) + 1) :
+                getWithPaddingZeros(1);
+            const thisYear = thisDate.getFullYear();
+            const thisMonth = thisDate.getMonth();
+            const centerCode = 'RPTC';
+            res.locals.data = `${centerCode}-${thisYear}${thisMonth > 9 ? thisMonth : `0${thisMonth}`}${courseCode}${enrollCount}`
+            next();
+        } catch (error) {
+            appLogger.error("26fce629-eeb0-48a3-a804-ffb696f592b0", req.txId, error.message);
+            next(error)
+        }
+    }
+
     return {
+        autogenerateAdmissionNumber,
         createNewStudent,
         studentClockIn,
         studentClockOut,

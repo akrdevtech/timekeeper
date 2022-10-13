@@ -108,6 +108,13 @@ const deleteStudent = {
     })
 }
 
+const autogenerateAdmissionNumber = {
+    query: Joi.object({
+        courseId: Joi.string().required(),
+        dateOfAdmission: Joi.string().required(),
+    })
+}
+
 module.exports = {
     createNewStudent,
     studentClockIn,
@@ -119,4 +126,5 @@ module.exports = {
     studentPursueCourse,
     getAllStudentsByFilter,
     deleteStudent,
+    autogenerateAdmissionNumber,
 };

@@ -75,6 +75,7 @@ module.exports = (app) => {
         } catch (error) {
             console.log("\n\nError occured");
             console.log(error);
+            throw error;
         }
     }
 

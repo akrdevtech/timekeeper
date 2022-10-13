@@ -11,7 +11,27 @@ module.exports = () => {
             end
         }
     }
+
+    const getStartOfMonth = (date = new Date()) => {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+
+    const getEndOfMonth = (date = new Date()) => {
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    }
+
+    const getStartAndEndOfMonth = (date = new Date()) => {
+        const start = getStartOfMonth(date);
+        const end = getEndOfMonth(date);
+        return {
+            start,
+            end
+        }
+    }
     return {
-        getStartAndEndOfDay
+        getStartAndEndOfDay,
+        getStartOfMonth,
+        getEndOfMonth,
+        getStartAndEndOfMonth,
     }
 }
