@@ -1,4 +1,4 @@
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import { Button, Grid, IconButton, InputAdornment, MenuItem, TextField, Tooltip } from '@mui/material';
 import React, { useEffect } from 'react'
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -6,6 +6,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useState } from 'react';
 import AddStudentWizardData from '../data'
 import courseApis from '../../../../../../api/courseServices';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import studentApis from '../../../../../../api/studentServices';
 
 const WizardStudentCourseInfo = (props) => {
 
@@ -28,6 +30,11 @@ const WizardStudentCourseInfo = (props) => {
     })
   }, [activeTab === AddStudentWizardData.tabIds.COURSE_INFO])
 
+  const handleGenerateAdmissionNumber = () => {
+    studentApis.autogenerateAdmissionNumber(course, dateOfAdmission).then(autoAdmno => {
+      handleInputChange('admissionNumber', autoAdmno);
+    })
+  }
 
   return (
     <Grid item xs={11}>
@@ -80,6 +87,14 @@ const WizardStudentCourseInfo = (props) => {
               value={admissionNumber}
               onChange={(e) => handleInputChange("admissionNumber", e.target.value)}
               error={errorKeys.includes("admissionNumber")}
+              InputProps={{
+                endAdornment:
+                  <InputAdornment position="start">
+                    <Tooltip title="auto generate" placement="bottom">
+                      <IconButton onClick={handleGenerateAdmissionNumber}><AutoFixHighIcon /></IconButton>
+                    </Tooltip>
+                  </InputAdornment>,
+              }}
             />
           </Grid>
         </LocalizationProvider>

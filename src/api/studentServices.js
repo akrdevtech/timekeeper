@@ -300,7 +300,30 @@ const studentGraduateCourse = (studentId) => {
     })
 }
 
+const autogenerateAdmissionNumber= async (courseId,dateOfAdmission=new Date()) => {
+    const date = new Date(dateOfAdmission);
+    let url = `/students/autogen-admno?courseId=${courseId}&dateOfAdmission=${date}`;
+    return await api.get(url).then((response) => {
+        if (response) {
+            const {
+                data,
+                data: { success },
+            } = response;
+
+            if (success !== undefined) {
+                const courseId = data.data;
+                return courseId;
+            }
+            console.log('No response data');
+            return undefined;
+        }
+        console.log('Error occured while communicating with api');
+        return undefined;
+    })
+}
+
 const studentApis = {
+    autogenerateAdmissionNumber,
     getStudentsList,
     createNewStudent,
     studentClockIn,

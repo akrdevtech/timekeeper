@@ -12,7 +12,7 @@ module.exports = (app) => {
         student.getAllStudentsByFilter,
     ]);
 
-    router.get('/autogen/admno', [
+    router.get('/autogen-admno', [
         validatorMiddleware(studentValidators.autogenerateAdmissionNumber),
         student.autogenerateAdmissionNumber,
     ]);
