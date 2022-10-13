@@ -2,6 +2,7 @@ const getDefaultSettings = () => {
     const profile = 'default';
 
     const settings = {
+        theme: 'light',
         studentListPaginationLimit: 14,
         courseListPaginationLimit: 10,
         studentListCourseDetailsPaginationLimit: 8,
