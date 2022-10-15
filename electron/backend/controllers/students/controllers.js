@@ -86,6 +86,7 @@ module.exports = (app) => {
             }
             const id = await students.createNewStudent(createParams);
             await courseService.enrollStudentToCourse(createParams.course, 1);
+            await enrollmentsService.upsertEnrollment(createParams.course, createParams.dateOfAdmission);
             res.locals.data = id;
             next();
         } catch (error) {

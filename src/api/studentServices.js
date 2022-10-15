@@ -300,7 +300,7 @@ const studentGraduateCourse = (studentId) => {
     })
 }
 
-const autogenerateAdmissionNumber= async (courseId,dateOfAdmission=new Date()) => {
+const autogenerateAdmissionNumber = async (courseId, dateOfAdmission = new Date()) => {
     const date = new Date(dateOfAdmission);
     let url = `/students/autogen-admno?courseId=${courseId}&dateOfAdmission=${date}`;
     return await api.get(url).then((response) => {

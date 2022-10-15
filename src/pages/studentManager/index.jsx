@@ -67,7 +67,7 @@ const StudentManager = () => {
         const { page, limit } = studentListPagination;
         studentApis.createNewStudent(studentCreateParams).then(res => {
             if (!res.success) {
-                dispatch({ type: StudentActions.STUDENT_WIZARD.ADD_STUDENT.FAILURE });
+                return dispatch({ type: StudentActions.STUDENT_WIZARD.ADD_STUDENT.FAILURE });
             }
             studentApis.getStudentsList(page, limit, appliedStudentListFilters).then(studentListData => {
                 const { count, rows } = studentListData

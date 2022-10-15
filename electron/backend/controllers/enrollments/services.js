@@ -33,8 +33,9 @@ module.exports = (app) => {
     }
 
     const upsertEnrollment = async (courseId, admissionDate = new Date()) => {
-        const thisYear = admissionDate.getFullYear();
-        const thisMonth = admissionDate.getMonth();
+        const thisDate = new Date(admissionDate);
+        const thisYear = thisDate.getFullYear();
+        const thisMonth = thisDate.getMonth();
         const upsertObject = {
             courseId,
             year: thisYear,
