@@ -5,6 +5,7 @@ const students = require("./students");
 const attendance = require("./attendance");
 const courses = require("./courses");
 const settings = require("./settings");
+const syllabus = require("./syllabus");
 
 module.exports = (app) => {
 
@@ -14,6 +15,7 @@ module.exports = (app) => {
     router.use('/attendance', attendance(app));
     router.use('/courses', courses(app));
     router.use('/settings', settings(app));
+    router.use('/syllabus', syllabus(app));
 
     return router
 }

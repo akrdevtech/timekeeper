@@ -5,6 +5,7 @@ const attendancesModel = require('./attendances');
 const coursesModel = require('./courses');
 const settingsModel = require('./settings');
 const enrollmentsModel = require('./enrollments');
+const syllabusModel = require('./syllabus');
 const loggerUtil = require('../utils/logger');
 
 const logger = loggerUtil("DB Initializer")
@@ -26,6 +27,7 @@ const Attendances = attendancesModel(sequelize, DataTypes, Model);
 const Courses = coursesModel(sequelize, DataTypes, Model);
 const Settings = settingsModel(sequelize, DataTypes, Model);
 const Enrollments = enrollmentsModel(sequelize, DataTypes, Model);
+const Syllabus = syllabusModel(sequelize, DataTypes, Model);
 
 const db = {
     Op,
@@ -38,6 +40,7 @@ const db = {
         Courses,
         Settings,
         Enrollments,
+        Syllabus,
     }
 }
 
