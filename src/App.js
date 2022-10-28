@@ -1,12 +1,13 @@
 import { createTheme, ThemeProvider } from '@mui/material';
-import React from 'react'
+import React, { Suspense, lazy } from "react";
 import SideAppDrawer from './components/common/SideAppDrawer';
-import StudentManager from "./pages/studentManager";
-import CourseManager from "./pages/courseManager";
 import StudentStore from './pages/studentManager/Store';
 import CourseStore from './pages/courseManager/Store';
 import { Routes, Route } from 'react-router-dom';
 import GlobalStore from './contexts/global/Store';
+
+const StudentManager = lazy(() => import("./pages/studentManager"));
+const CourseManager = lazy(() => import("./pages/courseManager"));
 
 //https://codereview.stackexchange.com/questions/256457/alarm-clock-with-react-js
 const theme = createTheme({
@@ -48,11 +49,13 @@ function App() {
           <SideAppDrawer >
             <StudentStore>
               <CourseStore>
-                <Routes>
-                  <Route path="/" element={<>Dashboard</>} />
-                  <Route path="/students" element={<StudentManager />} />
-                  <Route path="/courses" element={<CourseManager />} />
-                </Routes>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Routes>
+                    <Route path="/" element={<>Dashboard</>} />
+                    <Route path="/students" element={<StudentManager />} />
+                    <Route path="/courses" element={<CourseManager />} />
+                  </Routes>
+                </Suspense>
               </CourseStore>
             </StudentStore>
           </SideAppDrawer >

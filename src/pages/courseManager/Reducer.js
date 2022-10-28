@@ -203,10 +203,18 @@ const CourseReducer = (state, action) => {
         case CourseActions.COURSE_DETAILS.ENROLLMENTS.GET_UPDATED_ENROLLMENTS:
             return {
                 ...state,
-                courseDetailsStudents:{
+                courseDetailsStudents: {
                     ...state.courseDetailsStudents,
-                    studentList:action.payload.studentList,
+                    studentList: action.payload.studentList,
                     pagination: action.payload.pagination,
+                },
+            }
+        case CourseActions.COURSE_DETAILS.SYLLABUS.GET_UPDATED_SYLLABUS:
+            return {
+                ...state,
+                courseDetailsSyllabus: {
+                    ...state.courseDetailsSyllabus,
+                    courseSyllabus: action.payload.courseSyllabus,
                 },
             }
         default:

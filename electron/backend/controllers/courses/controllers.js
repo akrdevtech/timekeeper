@@ -1,8 +1,10 @@
 const CourseEnums = require('./enums');
 const courseServices = require('./services');
+const syllabusServices = require('../syllabus/services');
 
 module.exports = (app) => {
     const course = courseServices(app);
+    const syllabusService = syllabusServices(app);
     const {
         utils: {
             logger,
@@ -60,8 +62,10 @@ module.exports = (app) => {
             const {
                 courseId, courseName, duration, fee, totalCredits, minCredits, syllabus
             } = req.body;
+            const nextIndex = await course.getNextCourseIndex();
             const createParams = {
                 courseId,
+                code: nextIndex + 1,
                 courseName,
                 duration,
                 fee,
@@ -73,6 +77,13 @@ module.exports = (app) => {
                 studentsGraduated: 0
             }
             const courseCreationId = await course.createNewCourse(createParams);
+            const syllabusCreateParams = {
+                name: `${courseName}-syllabus`,
+                courseId,
+                code: nextIndex + 1,
+                description: courseName
+            }
+            await syllabusService.insertSyllabus(syllabusCreateParams);
             res.locals.data = courseCreationId;
             next();
         } catch (error) {

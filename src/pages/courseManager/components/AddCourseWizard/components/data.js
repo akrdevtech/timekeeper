@@ -25,7 +25,6 @@ const basicInfoDefaultData = {
     fee: 0,
     totalCredits: 0,
     minCredits: 0,
-    syllabus: undefined
 }
 
 

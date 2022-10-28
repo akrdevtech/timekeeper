@@ -1,4 +1,4 @@
-import { Button, Grid, IconButton, InputAdornment, MenuItem, TextField, Tooltip } from '@mui/material';
+import { Button, Grid, IconButton, InputAdornment,  TextField, Tooltip } from '@mui/material';
 import React from 'react'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import courseApis from '../../../../../../api/courseServices';
@@ -10,7 +10,7 @@ const WizardCourseBasicInfo = (props) => {
   } = props;
 
   const {
-    courseId, courseName, duration, syllabus, fee, totalCredits, minCredits
+    courseId, courseName, duration,  fee, totalCredits, minCredits
   } = basicInfo;
 
   const handleInputChange = (field, value) => {
@@ -76,20 +76,6 @@ const WizardCourseBasicInfo = (props) => {
                 </InputAdornment>,
             }}
           />
-        </Grid>
-        <Grid item xs={12} lg={6}>
-          <TextField
-            select
-            fullWidth
-            variant='outlined'
-            label='syllabus'
-            size="small"
-            value={syllabus}
-            onChange={(e) => handleInputChange("syllabus", e.target.value)}
-            error={errorKeys.includes("syllabus")}
-          >
-            <MenuItem key={undefined} value={undefined}></MenuItem>
-          </TextField>
         </Grid>
         <Grid item xs={12} lg={6}>
           <TextField

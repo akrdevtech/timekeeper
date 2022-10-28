@@ -16,7 +16,7 @@ module.exports = (app) => {
     } = app
 
     const getSyllabusForCourse = async (courseId) => {
-        return await Syllabus.findAll({ where: { courseId } });
+        return await Syllabus.findOne({ where: { courseId } });
     }
 
     const insertSyllabus = async (createParams) => {

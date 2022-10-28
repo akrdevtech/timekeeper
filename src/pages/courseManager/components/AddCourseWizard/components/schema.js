@@ -7,7 +7,6 @@ const basicInfoSchema = Joi.object({
     fee: Joi.number(),
     totalCredits: Joi.number(),
     minCredits: Joi.number(),
-    syllabus: Joi.string().optional(),
 });
 
 const AddStudentWizardSchemas = {

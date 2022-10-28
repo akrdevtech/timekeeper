@@ -45,6 +45,10 @@ const initialState = {
         },
         refreshStudentList: false,
         selectedStudentInCourseInfo: undefined,
+    },
+    courseDetailsSyllabus: {
+        courseSyllabus: [],
+        refreshSyllabusList: false,
     }
 };
 
