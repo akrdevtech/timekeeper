@@ -5,6 +5,7 @@ import StudentStore from './pages/studentManager/Store';
 import CourseStore from './pages/courseManager/Store';
 import { Routes, Route } from 'react-router-dom';
 import GlobalStore from './contexts/global/Store';
+import SyllabusManager from './pages/courseManager/pages/syllabusManager';
 
 const StudentManager = lazy(() => import("./pages/studentManager"));
 const CourseManager = lazy(() => import("./pages/courseManager"));
@@ -54,6 +55,7 @@ function App() {
                     <Route path="/" element={<>Dashboard</>} />
                     <Route path="/students" element={<StudentManager />} />
                     <Route path="/courses" element={<CourseManager />} />
+                    <Route path="/courses/syllabus" element={<SyllabusManager />} />
                   </Routes>
                 </Suspense>
               </CourseStore>

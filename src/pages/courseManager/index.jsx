@@ -8,6 +8,8 @@ import courseApis from '../../api/courseServices';
 import CourseList from './components/CoursesList';
 import CourseDetails from './components/CourseDetails';
 import AddCourseWizard from './components/AddCourseWizard';
+import PageHeader from '../../components/common/PageHeader';
+import HomeIcon from '@mui/icons-material/Home';
 
 const CourseManager = () => {
     const [state, dispatch] = useContext(CourseContext);
@@ -103,14 +105,18 @@ const CourseManager = () => {
         getUpdatedCourseList();
     }, [appliedCourseListFilters.search, courseListPagination.page, refreshCourseList === true])
 
+    const breadCrumbs = [
+        {
+            label: "Home",
+            icon: <HomeIcon fontSize='small' />,
+            link: '/courses'
+        }
+    ]
     return (
         <Grid container direction="row">
             <Grid item xs={12} lg={8} sx={{ backgroundColor: "#F5F8FB", padding: 2, minHeight: window.innerHeight }}>
-                <Grid container direction="row">
-                    <Grid item xs={12}>
-                        <Typography variant='h5'><b>Course Manager</b></Typography><br />
-                    </Grid>
-                    <Grid item xs={12} sx={{ paddingBottom: 2 }}>
+                <PageHeader breadCrumbs={breadCrumbs} handleBreadCrumbsClick={() => { }} pageTitle="Course Manager" >
+                    <Grid item xs={12} sx={{ paddingBottom: 2, paddingTop: 2 }}>
                         <Grid container direction="row" justifyContent="space-between" alignItems="center">
                             <Grid item xs={7}>
                                 <TextField
@@ -158,7 +164,7 @@ const CourseManager = () => {
                             handleSelectCourseId={handleSelectCourseId}
                         />
                     </Grid>
-                </Grid>
+                </PageHeader>
             </Grid>
             <Grid item xs={12} lg={4} sx={{ minHeight: window.innerHeight }}>
                 <CourseDetails

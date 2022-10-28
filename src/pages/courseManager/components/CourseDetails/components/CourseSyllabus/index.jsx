@@ -6,6 +6,7 @@ import syllabusApis from '../../../../../../api/syllabusServices';
 import SyllabusTree from './components/SyllabusTree';
 import EditIcon from '@mui/icons-material/Edit';
 import SyllabusEditor from './components/SyllabusEditor';
+import { Link } from 'react-router-dom';
 
 const CourseSyllabus = (props) => {
     const { activeTab } = props;
@@ -69,7 +70,14 @@ const CourseSyllabus = (props) => {
                     <Typography variant='body1' color="textSecondary" sx={{ paddingBottom: 2 }}><b>Syllabus</b> : {courseSyllabus.name}</Typography>
                 </Grid>
                 <Grid item xs={12} lg={1} sx={{ paddingBottom: 2 }}>
-                    <IconButton size='small' onClick={handleSyllabusEditorOpen}><EditIcon fontSize='small' /></IconButton>
+                    <Link to={"/courses/syllabus"}>
+                        <IconButton
+                            size='small'
+                        // onClick={handleSyllabusEditorOpen}
+                        >
+                            <EditIcon fontSize='small' />
+                        </IconButton>
+                    </Link>
                 </Grid>
                 <Grid item xs={12} lg={12}>
                     <SyllabusTree />

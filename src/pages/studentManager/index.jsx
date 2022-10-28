@@ -8,6 +8,8 @@ import studentApis from '../../api/studentServices';
 import { StudentContext } from './Store'
 import StudentActions from "./Actions";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import HomeIcon from '@mui/icons-material/Home';
+import PageHeader from '../../components/common/PageHeader';
 
 const StudentManager = () => {
 
@@ -112,15 +114,19 @@ const StudentManager = () => {
         getUpdatedStudentList();
     }, [appliedStudentListFilters.search, studentListPagination.page, refreshStudentList])
 
+    const breadCrumbs = [
+        {
+            label: "Home",
+            icon: <HomeIcon fontSize='small' />,
+            link: '/students'
+        }
+    ]
 
     return (
         <Grid container direction="row">
             <Grid item xs={12} lg={8} sx={{ backgroundColor: "#F5F8FB", padding: 2, minHeight: window.innerHeight }}>
-                <Grid container direction="row">
-                    <Grid item xs={12}>
-                        <Typography variant='h5'><b>Student Manager</b></Typography><br />
-                    </Grid>
-                    <Grid item xs={12} sx={{ paddingBottom: 2 }}>
+                <PageHeader breadCrumbs={breadCrumbs} handleBreadCrumbsClick={() => { }} pageTitle="Student Manager" >
+                    <Grid item xs={12} sx={{ paddingBottom: 2, paddingTop: 2 }}>
                         <Grid container direction="row" justifyContent="space-between" alignItems="center">
                             <Grid item xs={7}>
                                 <TextField
@@ -164,7 +170,7 @@ const StudentManager = () => {
                     <Grid item xs={12}>
                         <StudentsList studentsList={studentsList} selectedStudentId={selectedStudentId} handleSelectStudentId={handleSelectStudentId} />
                     </Grid>
-                </Grid>
+                </PageHeader>
             </Grid>
             <Grid item xs={12} lg={4} sx={{ minHeight: window.innerHeight }}>
                 <StudentProfile
