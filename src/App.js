@@ -8,6 +8,7 @@ import GlobalStore from './contexts/global/Store';
 import SyllabusManager from './pages/courseManager/pages/syllabusManager';
 import StudentManager from './pages/studentManager';
 import CourseManager from './pages/courseManager';
+import CourseSyllabusStore from './pages/courseManager/pages/syllabusManager/Store';
 
 //https://codereview.stackexchange.com/questions/256457/alarm-clock-with-react-js
 const theme = createTheme({
@@ -54,7 +55,7 @@ function App() {
                     <Route path="/" element={<>Dashboard</>} />
                     <Route path="/students" element={<StudentManager />} />
                     <Route path="/courses" element={<CourseManager />} />
-                    <Route path="/courses/syllabus" element={<SyllabusManager />} />
+                    <Route path="/courses/syllabus" element={<CourseSyllabusStore><SyllabusManager /></CourseSyllabusStore>} />
                   </Routes>
                 </Suspense>
               </CourseStore>

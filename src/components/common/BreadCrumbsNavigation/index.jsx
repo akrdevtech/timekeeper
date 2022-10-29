@@ -29,6 +29,7 @@ export default function BreadcrumbsNavigation(props) {
         <Breadcrumbs aria-label="breadcrumb">
             {crumbs.map(crumb => (
                 <StyledBreadcrumb
+                    key={crumb.label}
                     component="a"
                     href={crumb.link || '#'}
                     label={crumb.label}
