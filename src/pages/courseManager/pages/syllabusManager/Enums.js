@@ -10,6 +10,13 @@ const CourseSyllabusEnums = {
     },
     syllabusTree: {
         DEFAULT_ROOT: 'syllabusContents'
+    },
+    overviewActions: {
+        EDIT: 'EDIT',
+        DELETE: 'DELETE',
+        ADD_CHILD: 'ADD_CHILD',
+        ADD_SIBLING: 'ADD_SIBLING',
+        ARRANGE_CHILDREN: 'ARRANGE_CHILDREN'
     }
 
 }

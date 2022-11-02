@@ -1,9 +1,10 @@
-import {  Grid, IconButton, Menu, MenuItem, Typography, useTheme } from '@mui/material'
+import { Fab, Grid, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React, { useContext } from 'react'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import { CourseContext } from '../../../../Store';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Link } from 'react-router-dom';
 
 const CourseProfileHeader = (props) => {
     const { slotPage } = props;
@@ -18,7 +19,6 @@ const CourseProfileHeader = (props) => {
         setAnchorEl(null);
     };
 
-    const theme = useTheme();
     return (
         <Grid container direction="row">
             <Grid item xs={12} lg={11}>
@@ -29,12 +29,12 @@ const CourseProfileHeader = (props) => {
             {slotPage === "syllabus" ? (
                 <Grid item xs={12} lg={1}>
                     <Grid item xs={12} lg={4} >
-                        <IconButton
-                            onClick={() => window.history.back()}
-                            aria-label="addtime" sx={{ backgroundColor: theme.palette.primary.main, color: 'white' }}
-                        >
-                            <ArrowBackIcon />
-                        </IconButton>
+                        <Link to="/courses">
+                            <Fab color="primary" size='small' sx={{ boxShadow: 'none' }}>
+                                <ArrowBackIcon />
+                            </Fab>
+                        </Link>
+
                     </Grid>
                 </Grid>
             ) : (

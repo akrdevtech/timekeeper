@@ -1,4 +1,4 @@
-import { Box, Fab, Grid, Paper, Tab } from '@mui/material'
+import { Box, Card, CardContent, Fab, Grid, Paper, Tab } from '@mui/material'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -15,6 +15,13 @@ import CourseSyllabusActions from './Actions';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from '@mui/icons-material/Add';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SyllabusAssociatedTests from './components/SyllabusAssociatedTests/SyllabusAssociatedTests';
+import SyllabusOverview from './components/SyllabusOverview';
+import { GlobalContext } from '../../../../contexts/global/Store';
+import GlobalActions from '../../../../contexts/global/Actions';
+import OverviewActionMenus from './components/OverviewActionMenus';
 
 const SyllabusManager = () => {
     const breadCrumbs = [
@@ -32,6 +39,8 @@ const SyllabusManager = () => {
 
     const [courseState] = useContext(CourseContext);
     const [syllabusState, syllabusDispatch] = useContext(CourseSyllabusContext);
+    const [globalState, globalDispatch] = useContext(GlobalContext);
+
 
     const { editorMode, activeTab, selectedTopicContents } = syllabusState;
 
@@ -46,11 +55,9 @@ const SyllabusManager = () => {
 
 
     const handleSetEditorContents = (editorData) => {
-        console.log({ editorData });
         setEditorContents(editorData);
     }
     const selectContent = (node) => {
-        console.log(node);
         setSelectedSyllabusContentInEditor(node);
     }
 
@@ -63,11 +70,18 @@ const SyllabusManager = () => {
                 }
             }
         )
+        globalDispatch(
+            {
+                type: GlobalActions.GENERIC_SNACKBAR.OPEN,
+                payload: {
+                    message: "Saved Content",
+                }
+            }
+        )
     }
 
 
     const handleTabChange = (event, newValue) => {
-        console.log(newValue);
         syllabusDispatch(
             {
                 type: CourseSyllabusActions.SYLLABUS_DETAILS_TABS.SELECT,
@@ -83,7 +97,6 @@ const SyllabusManager = () => {
         if (editorMode === Enums.editorModes.EDIT) {
             newMode = Enums.editorModes.VIEW;
         }
-        console.log(selectedTopicContents);
 
         syllabusDispatch(
             {
@@ -97,7 +110,6 @@ const SyllabusManager = () => {
 
     useEffect(() => {
         if (inputEl.current && activeTab === Enums.detailsTabs.CONTENTS) {
-            console.log('changing');
             inputEl.current.innerHTML = selectedTopicContents;
         }
     }, [editorMode, selectedTopicContents, activeTab])
@@ -134,6 +146,79 @@ const SyllabusManager = () => {
         ]
     };
 
+    const [overviewMenuAnchorEl, setOverviewMenuAnchorEl] = React.useState(null);
+    const openOverviewMenu = Boolean(overviewMenuAnchorEl);
+    const handleOverviewMenuClick = (event) => {
+        setOverviewMenuAnchorEl(event.currentTarget);
+    };
+    const handleOverviewMenuClose = () => {
+        setOverviewMenuAnchorEl(null);
+    };
+
+    const selectOverviewMenu=(menuAction)=>{
+        setOverviewMenuAnchorEl(null);
+    }
+
+    const overviewMenuProps = {
+        anchorEl: overviewMenuAnchorEl,
+        open: openOverviewMenu,
+        handleSelectMenu: selectOverviewMenu,
+        handleClose: handleOverviewMenuClose
+    }
+    const getActiveTabActions = () => {
+        switch (activeTab) {
+            case Enums.detailsTabs.CONTENTS:
+                return (
+                    <Grid item lg={12} >
+                        <Grid container direction="row" justifyContent="flex-end" alignItems="center" >
+                            {editorMode === Enums.editorModes.VIEW ?
+                                (
+                                    <Fab color="primary" aria-label="add" onClick={toggleEditorMode}>
+                                        <EditIcon />
+                                    </Fab>
+                                ) : (
+                                    <>
+                                        <Fab size="small" color="primary" aria-label="add"
+                                            onClick={() => saveEditorContents(editorContents)}
+                                        >
+                                            <SaveIcon />
+                                        </Fab>
+                                        &nbsp;
+                                        <Fab color="error" aria-label="add" onClick={toggleEditorMode}>
+                                            <ClearIcon />
+                                        </Fab>
+                                    </>
+                                )}
+                        </Grid>
+                    </Grid>
+                )
+
+            case Enums.detailsTabs.OVERVIEW:
+                return (
+                    <Grid item lg={12} >
+                        <Grid container direction="row" justifyContent="flex-end" alignItems="center" >
+                            <Fab color="primary" aria-label="add" onClick={handleOverviewMenuClick}>
+                                <MoreVertIcon />
+                            </Fab>
+                        </Grid>
+                    </Grid>
+                )
+
+            case Enums.detailsTabs.TESTS:
+                return (
+                    <Grid item lg={12} >
+                        <Grid container direction="row" justifyContent="flex-end" alignItems="center" >
+                            <Fab color="primary" aria-label="add" onClick={toggleEditorMode}>
+                                <AddIcon />
+                            </Fab>
+                        </Grid>
+                    </Grid>
+                )
+
+            default:
+                break;
+        }
+    }
 
     return (
         <Grid container direction="row">
@@ -158,10 +243,16 @@ const SyllabusManager = () => {
                             </Grid>
                             <Grid item lg={12} sx={{ height: '78vh', maxHeight: '78vh', overflowY: 'scroll' }}>
                                 <TabPanel value={Enums.detailsTabs.CONTENTS}>
-                                    <div
-                                        ref={inputEl}
-                                        style={{ display: editorMode !== Enums.editorModes.EDIT ? "block" : 'none' }}>
-                                    </div>
+                                    <Grid item xs={12} >
+                                        <Card
+                                            sx={{ minHeight: '70vh', borderRadius: 1, boxShadow: 'none' }}
+                                            style={{ display: editorMode !== Enums.editorModes.EDIT ? "block" : 'none' }}>
+                                            <CardContent ref={inputEl}>
+
+                                            </CardContent>
+                                        </Card>
+
+                                    </Grid>
                                     <div style={{ display: editorMode === Enums.editorModes.EDIT ? "block" : 'none' }}>
                                         <EditorSyllabusContent
                                             value={selectedTopicContents}
@@ -170,45 +261,13 @@ const SyllabusManager = () => {
                                     </div>
                                 </TabPanel>
                                 <TabPanel value={Enums.detailsTabs.TESTS}>
-
-                                    tests
+                                    <SyllabusAssociatedTests />
                                 </TabPanel>
                                 <TabPanel value={Enums.detailsTabs.OVERVIEW}>
-
-                                    OVERVIEW
+                                    <SyllabusOverview />
                                 </TabPanel>
                             </Grid>
-                            <Grid item lg={12} >
-                                <Grid
-                                    container
-                                    direction="row"
-                                    justifyContent="flex-end"
-                                    alignItems="center"
-                                >
-                                    {editorMode === Enums.editorModes.VIEW ?
-                                        (
-                                            <Fab color="primary" aria-label="add" onClick={toggleEditorMode}>
-                                                <EditIcon />
-                                            </Fab>
-                                        ) : (
-                                            <>
-
-                                                <Fab
-                                                    size="small"
-                                                    color="primary"
-                                                    aria-label="add"
-                                                    onClick={() => saveEditorContents(editorContents)}
-                                                >
-                                                    <SaveIcon />
-                                                </Fab>
-                                                &nbsp;
-                                                <Fab color="error" aria-label="add" onClick={toggleEditorMode}>
-                                                    <ClearIcon />
-                                                </Fab>
-                                            </>
-                                        )}
-                                </Grid>
-                            </Grid>
+                            <>{getActiveTabActions()}</>
                         </TabContext>
                     </Grid>
                 </PageHeader>
@@ -237,6 +296,7 @@ const SyllabusManager = () => {
                         </Grid>
                     </Grid >
                 </Paper>
+                <OverviewActionMenus {...overviewMenuProps} />
             </Grid>
         </Grid>
     )

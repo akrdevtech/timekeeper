@@ -9,6 +9,7 @@ import SyllabusManager from './pages/courseManager/pages/syllabusManager';
 import StudentManager from './pages/studentManager';
 import CourseManager from './pages/courseManager';
 import CourseSyllabusStore from './pages/courseManager/pages/syllabusManager/Store';
+import GlobalComponent from './components/common/GlobalComponent';
 
 //https://codereview.stackexchange.com/questions/256457/alarm-clock-with-react-js
 const theme = createTheme({
@@ -50,6 +51,7 @@ function App() {
           <SideAppDrawer >
             <StudentStore>
               <CourseStore>
+                <GlobalComponent />
                 <Suspense fallback={<div>Loading...</div>}>
                   <Routes>
                     <Route path="/" element={<>Dashboard</>} />
